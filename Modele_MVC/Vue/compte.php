@@ -11,7 +11,7 @@
         <a href="../Vue/accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
         <nav>
             <a href="../Vue/documentation.html">Documentation</a>
-            <a href="../Contrôleurs/info.php ">Collection</a>
+            <a href="../controleurs/info.php ">Collection</a>
             <a href="../Vue/reservation_View.php">Réservation</a>
             <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
         </nav>
@@ -42,7 +42,7 @@
                     <button type="submit" class="btn-submit">Mettre à jour la photo</button>
                 </form>
                 
-                <form action="../Contrôleurs/update_profile.php" method="post" class="form-gestion-compte">
+                <form action="../controleurs/update_profile.php" method="post" class="form-gestion-compte">
                 
                     <label for="numero">Numéro étudiant :</label>
                     <input type="text" id="numero" name="numero" placeholder="Entrez votre numéro étudiant" value="" required>

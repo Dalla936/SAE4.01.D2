@@ -1,5 +1,5 @@
 <?php
-require_once '../Modèle/GameModel.php';
+require_once '../modele/GameModel.php';
     $gamemodel = new GameModel();
     // Vérifier si le formulaire a été soumis
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

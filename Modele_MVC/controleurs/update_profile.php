@@ -1,5 +1,5 @@
 <?php
-require_once '../Modèle/GameModel.php'; // Inclure le modèle
+require_once '../modele/GameModel.php'; // Inclure le modèle
 
 // Démarrer la session pour accéder à l'utilisateur connecté
 session_start();

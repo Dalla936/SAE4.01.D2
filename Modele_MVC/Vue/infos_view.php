@@ -45,7 +45,7 @@
         <a href="../Vue/accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
         <nav>
             <a href="../Vue/documentation.html">Documentation</a>
-            <a href="../Contrôleurs/info.php">Collection</a>
+            <a href="../controleurs/info.php">Collection</a>
             <a href="../Vue/reservation_View.php">Réservation</a>
             <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
         </nav>
@@ -74,7 +74,7 @@
     <div class="popup" id="popupFiltre">
         <div class="popup-content">
             <h2>  ⚙️ Filtrer les jeux</h2>
-            <form action="../Contrôleurs/info.php" method="get">
+            <form action="../controleurs/info.php" method="get">
                 <label>
                     <input type="radio" name="tri" value="ancien"> Du plus ancien au plus récent
                 </label>
@@ -92,7 +92,7 @@
     <div class="popup" id="popupAjoutJeu">
         <div class="popup-content">
             <h2>Ajouter un jeu</h2>
-            <form action="../Contrôleurs/info.php" method="get">
+            <form action="../controleurs/info.php" method="get">
                 <label for="titreJeu">Titre du jeu :</label>
                 <input type="text" id="titreJeu" name="titreJeu" required>
                 <br>

@@ -8,11 +8,4 @@ $connection = new PDO('pgsql:host='.$dbhost.";dbname=".$dbname, $dbuser, $dbpass
 
 $requete = $connection->prepare('SELECT count(*) FROM jeux;');
 $requete->execute();
-//$tab = $requete->fetch(PDO::FETCH_ASSOC); //:: j'accède a la classe PDO, j'accède à l'attribut dePDO, j'accède à fetch assoc
-//echo $tab["count"]; //on echo pas le tab direct
-
-
-
-
-//fetch = je recup la requete
 ?>

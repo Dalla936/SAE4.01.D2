@@ -64,7 +64,7 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
     <a href="accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
     <nav>
         <a href="documentation.html">Documentation</a>
-        <a href="../Contrôleurs/info.php">Collection</a>
+        <a href="../controleurs/info.php">Collection</a>
         <a href="reservation_View.php">Réservation</a>
         <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
     </nav>
@@ -88,7 +88,7 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
 <main>
     <div class="reservation-form">
         <h2>Réservation</h2>
-        <form action="../Contrôleurs/index.php" method="post">
+        <form action="../controleurs/index.php" method="post">
             <!-- Numéro étudiant -->
             <label for="nom">Nom</label>
             <input type="text" id="nom" name="nom" placeholder="Nom" required>

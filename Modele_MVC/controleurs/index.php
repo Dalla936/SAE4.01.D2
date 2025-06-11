@@ -1,6 +1,6 @@
 <?php
 // Inclusion du modèle
-require_once '../Modèle/GameModel.php';
+require_once '../modele/GameModel.php';
 
 // Initialisation du modèle
 $gameModel = new GameModel();

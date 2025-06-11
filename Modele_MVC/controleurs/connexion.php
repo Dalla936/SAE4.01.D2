@@ -1,5 +1,5 @@
 <?php
-require '../Modèle/GameModel.php';
+require '../modele/GameModel.php';
 $gamemodel = new GameModel();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

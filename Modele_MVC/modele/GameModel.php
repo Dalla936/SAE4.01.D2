@@ -4,7 +4,7 @@ class GameModel {
     private $connection;
 
     public function __construct() {
-        require '../Modèle/nbpn.php';
+        require '../modele/nbpn.php';
         $this->connection = $connection;
         $this->connection->query("SET NAMES 'utf8'");
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //error mode 
