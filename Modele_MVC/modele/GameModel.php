@@ -316,6 +316,12 @@ public function addGames($titreJeu, $dateParutionDebut, $dateParutionFin, $Nbjou
 
 
  }
+ public function getUserByNumeroEtu($numero_etu) {
+    $sql = "SELECT * FROM utilisateurs WHERE numero_etu = :numero_etu";
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([':numero_etu' => $numero_etu]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
     
 }   
 
