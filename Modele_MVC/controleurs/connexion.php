@@ -2,43 +2,29 @@
 require '../modele/GameModel.php';
 $gamemodel = new GameModel();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $identifiant = htmlspecialchars($_POST['id']);
-    $mot_de_passe = htmlspecialchars($_POST['mdp']);
+session_start();
 
-    try {
-        if ($gamemodel->connecterUtilisateur($identifiant, $mot_de_passe)) {
-            // Connexion réussie
-            require '../Vue/accueil.html';
-            exit;
-        }
-    } catch (Exception $e) {
-        echo "Erreur : " . $e->getMessage();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $numero_etu = trim($_POST['numero_etu']);
+    $mot_de_passe = trim($_POST['mdp']);
+
+    // Vérifier les informations de l'utilisateur
+    $user = $gamemodel->getUserByNumeroEtu($numero_etu); // Adapte le nom de la méthode si besoin
+
+    if ($user && $mot_de_passe === $user['mot_de_passe_nonh']) { // ou password_verify si hashé
+        $_SESSION['numero_etu'] = $user['numero_etu'];
+        $_SESSION['username'] = $user['nom'];
+        $_SESSION['role_id'] = $user['role_id'];
+
+        setcookie('numero_etu', $user['numero_etu'], time() + 7246060, "/");
+        setcookie('username', $user['nom'], time() + 7246060, "/");
+        setcookie('role_id', $user['role_id'], time() + 72460*60, "/");
+
+        header("Location: ../Vue/accueil.html");
+        exit;
+    } else {
+        header("Location: ../Vue/mdp_refus.html");
+        exit;
     }
 }
-session_start(); // Démarrer une session
-
-
-// Exemple de récupération des données du formulaire
-$numero_etu = trim($_POST['id']);
-$mot_de_passe = trim($_POST['mdp']);
-
-
-// Vérifier les informations de l'utilisateur
-$user = $gamemodel->getUserById($numero_etu); // Une méthode pour récupérer l'utilisateur via son numéro étudiant
-
-if ($user && password_verify($mot_de_passe, $user['mdp'])) {
-    // Si l'utilisateur est authentifié avec succès, stocker ses informations dans la session
-    $_SESSION['user_id'] = $user['id']; // ID de l'utilisateur
-    $_SESSION['username'] = $user['nom']; // Nom de l'utilisateur
-    $_SESSION['role_id'] = $user['role_id']; // Rôle de l'utilisateur (ex. utilisateur, gestionnaire, admin)
-
-    // Rediriger vers une page (par exemple, la page d'accueil)
-    header("Location: ../Vue/accueil.html");
-    exit;
-} else {
-    // redirige vers la page de refus
-    header("Location : ../Vue/mdp_refus.html");
-    exit();
-}
-    ?>
+?>

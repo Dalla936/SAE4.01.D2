@@ -13,15 +13,18 @@
             <a href="../Vue/documentation.html">Documentation</a>
             <a href="../controleurs/info.php ">Collection</a>
             <a href="../Vue/reservation_View.php">Réservation</a>
+
             <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
         </nav>
         <div class="search-bar">
-                <form action="../Contrôleurs/index.php" method="get">
+                <form action="../controleurs/index.php" method="get">
                 <input type="hidden" name="action" value="searchGame">
                 <input type="text" name="query" placeholder="Rechercher un jeu..." required>
                 <button type="submit">🔍</button>
         </div>
         <div class="profil-utilisateur" id="profilUtilisateur">
+        <span class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></span>
+
             <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
 
             <div class="menu-deroulant" id="menuDeroulant">
@@ -44,11 +47,11 @@
                 
                 <form action="../controleurs/update_profile.php" method="post" class="form-gestion-compte">
                 
-                    <label for="numero">Numéro étudiant :</label>
-                    <input type="text" id="numero" name="numero" placeholder="Entrez votre numéro étudiant" value="" required>
+                <input type="text" id="numero" name="numero" placeholder="Entrez votre numéro étudiant"
+                value="<?php echo isset($_COOKIE['numero_etu']) ? htmlspecialchars($_COOKIE['numero_etu']) : ''; ?>" readonly required>
 
                     <label for="username"> Nom :</label>
-                    <input type="text" id="username" name="username" placeholder="Entrez votre nom" value="" required>
+                    <input type="text" id="username" name="username" placeholder="Entrez votre nom" value="<?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : ''; ?>" readonly required>
                 
                     <label for="password">Mot de passe :</label>
                     <input type="password" id="password" name="password" placeholder="Entrez un nouveau mot de passe" required>
