@@ -185,7 +185,7 @@ main {
 .reservation-form button {
     padding: 10px;
     font-size: 18px;
-    background-color: #ffffff;
+    background-color: #FF972F;
     color: #000000;
     border: none;
     border-radius: 5px;
@@ -193,7 +193,7 @@ main {
 }
 
 .reservation-form button:hover {
-    background-color: #A8917E;
+    background-color: #FF972F;
     color: #fff;
 }
 
