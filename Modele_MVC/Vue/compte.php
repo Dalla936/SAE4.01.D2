@@ -35,7 +35,7 @@
     </header>
 
     <div class="container">
-        <h1>Gestion de Compte</h1>
+        <h1 style="color :white;">Gestion de Compte</h1>
         <section class="profil-section">
             <div class="photo-profil">
                 <form action="" method="post" enctype="multipart/form-data" class="photo-profil">
@@ -47,6 +47,8 @@
                 
                 <form action="../controleurs/update_profile.php" method="post" class="form-gestion-compte">
                 
+                <label for="numero"> Numéro Étudiant :</label>
+
                 <input type="text" id="numero" name="numero" placeholder="Entrez votre numéro étudiant"
                 value="<?php echo isset($_COOKIE['numero_etu']) ? htmlspecialchars($_COOKIE['numero_etu']) : ''; ?>" readonly required>
 
