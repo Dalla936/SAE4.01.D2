@@ -22,7 +22,7 @@ class GameModel {
             jeux.version,
             COALESCE(jeux.nombre_de_joueurs, 'Nombre inconnu') AS nombre_de_joueurs,
             jeux.age_indique,
-            jeux.mots_cles,
+            COALESCE(jeux.mots_cles, 'Pas de mots clés') AS mots_cles,
             COALESCE(mecanisme.nom, 'Type inconnu') AS mecanisme,
             -- Récupérer les noms des auteurs associés au jeu
 COALESCE(string_agg(DISTINCT COALESCE(auteur.nom, 'Auteur inconnu'), ', '), 'Aucun auteur disponible') AS auteurs,
@@ -311,10 +311,6 @@ public function addGames($titreJeu, $dateParutionDebut, $dateParutionFin, $Nbjou
         return "Erreur : " . $e->getMessage();
     }
 
-
-
-
-
  }
  public function getUserByNumeroEtu($numero_etu) {
     $sql = "SELECT * FROM utilisateurs WHERE numero_etu = :numero_etu";
@@ -322,8 +318,54 @@ public function addGames($titreJeu, $dateParutionDebut, $dateParutionFin, $Nbjou
     $stmt->execute([':numero_etu' => $numero_etu]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+public function getAllUsers() {
+    $sql = "SELECT * FROM utilisateurs";
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
     
 }   
+public function updateUserRoleId($userId, $roleId) {
+    try {
+        $sql = "UPDATE utilisateurs SET role_id = :role_id WHERE id = :user_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':role_id', $roleId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return "Rôle mis à jour avec succès.";
+    } catch (PDOException $e) {
+        return "Erreur lors de la mise à jour du rôle : " . $e->getMessage();
+    }
 
 
+}
+public function updateGameTitle($gameId, $newTitle) {
+    try {
+        $sql = "UPDATE jeux SET titre = :newTitle WHERE id_jeu = :gameId";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':newTitle', $newTitle, PDO::PARAM_STR);
+        $stmt->bindParam(':gameId', $gameId, PDO::PARAM_INT);
+        $stmt->execute();
+        return "Titre du jeu mis à jour avec succès.";
+    } catch (PDOException $e) {
+        return "Erreur lors de la mise à jour du titre du jeu : " . $e->getMessage();
+    }
+}
+
+public function deleteUser($userId) {
+    try {
+        // Préparer la requête pour supprimer l'utilisateur
+        $query = "DELETE FROM utilisateurs WHERE id = :id";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+
+        // Exécuter la requête
+        $stmt->execute();
+    } catch (PDOException $e) {
+        // Gérer les erreurs
+        throw new Exception("Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
+    }
+}
+
+}
 ?> 

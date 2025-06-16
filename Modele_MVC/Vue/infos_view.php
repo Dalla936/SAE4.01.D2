@@ -60,7 +60,10 @@
             <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
             <div class="menu-deroulant" id="menuDeroulant">
                 <a href="../Vue/compte.php">Gestion du profil</a>
-                <button class="bouton-deconnexion">Déconnexion</button>
+                <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
+            <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
+        <?php endif; ?>
+        <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
             </div>
         </div>
     </header>
