@@ -4,7 +4,12 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
+    background: url('../img/jeu_c.jpg') no-repeat center center fixed;
+    background-size: cover;
     color: #333;
+    backdrop-filter: blur(8px); /* Flou du background*/
+    height: 100vh;
+    width: 100vw;
 }
 
 /* Header */
@@ -225,7 +230,7 @@ header .search-bar button {
 }
 
 .photo-profil .btn-submit {
-    background-color: #4CAF50;
+    background-color: #FF972F;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -235,7 +240,7 @@ header .search-bar button {
 }
 
 .photo-profil .btn-submit:hover {
-    background-color: #45a049;
+    background-color: #e67e1d;
 }
 
 #photoPreview {
@@ -247,4 +252,3 @@ header .search-bar button {
     border: 3px solid #ddd;
     object-fit: cover;
 }
-
