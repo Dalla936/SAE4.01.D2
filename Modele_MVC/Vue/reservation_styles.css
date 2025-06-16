@@ -1,4 +1,3 @@
-
 /* Global styles */
 body {
     font-family: Arial, sans-serif;
@@ -10,7 +9,6 @@ body {
     height: 100dvh;
     position: relative;
 }
-
 
 header {
     position: fixed;
@@ -40,16 +38,13 @@ nav a {
     text-decoration: none;
     font-weight: bold;
 }
-
 nav a:hover {
     text-decoration: underline;
 }
-
 .search-bar {
     display: flex;
     align-items: center;
 }
-
 /* Barre de recherche dans le header */
 header .search-bar {
     display: flex;
@@ -58,7 +53,6 @@ header .search-bar {
     border-radius: 25px; 
     padding: 1px 30px; 
 }
-
 header .search-bar input {
     border: none;
     background: none;
@@ -69,7 +63,6 @@ header .search-bar input {
     font-size: 16px; 
     border-radius: 20px;
 }
-
 header .search-bar button {
     background: none;
     border: none;
@@ -78,15 +71,12 @@ header .search-bar button {
     cursor: pointer;
     margin-left: 15px; 
 }
-
 /* Style pour la section du profil utilisateur */
 .profil-utilisateur {
     position: flex;
     margin-right: 200px;
     display: inline-block;
 }
-
-
 /* Style pour l'image de l'icône utilisateur */
 .icone-utilisateur {
     cursor: pointer;
@@ -96,7 +86,6 @@ header .search-bar button {
     object-fit: cover; /* Ajuste l'image pour qu'elle remplisse le cadre */
     border: 2px solid #ccc; /* Optionnel : ajoute une bordure */
 }
-
 /* Style pour le menu déroulant */
 .menu-deroulant {
     display: none; /* Caché par défaut */
@@ -106,7 +95,6 @@ header .search-bar button {
     box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     z-index: 1;
 }
-
 /* Style des liens dans le menu déroulant */
 .menu-deroulant a {
     color: black;
@@ -114,7 +102,6 @@ header .search-bar button {
     text-decoration: none;
     display: block;
 }
-
 /* Effet hover sur les liens du menu */
 .menu-deroulant a:hover {
     background-color: #f1f1f1;
@@ -134,7 +121,6 @@ header .search-bar button {
     margin-top: 8px; /* Espace entre les liens et le bouton */
     transition: background-color 0.3s ease; /* Animation pour l'effet hover */
 }
-
 .bouton-deconnexion:hover {
     background-color: #d93636; /* Couleur plus sombre au survol */
 }
@@ -185,16 +171,16 @@ main {
 .reservation-form button {
     padding: 10px;
     font-size: 18px;
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #FF972F;
+    color: #FFFFFF;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
+    cursor: pointer;/* Global styles */
 }
 
 .reservation-form button:hover {
-    background-color: #A8917E;
-    color: #fff;
+    background-color: #FFFFFF;
+    color: #000;
 }
 
 .footer {
