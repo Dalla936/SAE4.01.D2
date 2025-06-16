@@ -11,72 +11,8 @@ $nbPages = $nbPages ?? 1;?>
     <title>Collection - Université Sorbonne Paris Nord</title>
     <link rel="stylesheet" href="../Vue/collection.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"> <!-- css de la bibliothèque flatpick-->
-
-    <style>
-        /* Ajout des styles pour les cartes de jeu */
-        .container {
-            padding: 20px;
-        }
-
-        .game-card {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-            text-align: center;
-        }
-
-        .game-card h3 {
-            margin-top: 0;
-        }
-
-        .game-card button {
-            background-color: #002147;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .game-card button:hover {
-            background-color: #003366;
-        }
-        .pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 0;
-}
-
-.pagination a, 
-.pagination span {
-  background-color: #002147;
-  color: white;
-  padding: 8px 14px;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: 600;
-  user-select: none;
-  min-width: 36px;
-  text-align: center;
-  display: inline-block;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-}
-
-.pagination a:hover {
-  background-color: #004080;
-}
-
-.pagination span {
-  background-color: #001a33;
-  cursor: default;
-}
-
-    </style>
 </head>
+
 <body>
     <header>
         <a href="../Vue/accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
