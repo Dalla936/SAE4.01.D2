@@ -1,3 +1,8 @@
+<?php
+$page = $page ?? 1;
+$nbPages = $nbPages ?? 1;?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -38,6 +43,38 @@
         .game-card button:hover {
             background-color: #003366;
         }
+        .pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.pagination a, 
+.pagination span {
+  background-color: #002147;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  user-select: none;
+  min-width: 36px;
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.pagination a:hover {
+  background-color: #004080;
+}
+
+.pagination span {
+  background-color: #001a33;
+  cursor: default;
+}
+
     </style>
 </head>
 <body>
@@ -118,25 +155,82 @@
     </div>
 
     <div class="container">
-        <h1>Collection de jeux</h1>
+    <h1>Collection de jeux</h1>
+    <?php if (!empty($games)): ?>
+        <?php foreach ($games as $game): ?>
+            <div class="game-card">
+                <h3><?= htmlspecialchars($game['titre']) ?></h3>
+                <p><strong>Auteur :</strong> <?= htmlspecialchars($game['auteurs'] ?? '') ?>
+</p>
+                <p><strong>Éditeur :</strong> <?= htmlspecialchars($game['editeurs']) ?></p>
+                <p><strong>Année de publication :</strong> <?= htmlspecialchars($game['date_parution_debut']) ?></p>
+                <p><strong>Nombre de joueurs :</strong> <?= htmlspecialchars($game['nombre_de_joueurs']) ?></p>
+                <p><strong>Type de jeu :</strong> <?= htmlspecialchars($game['mecanisme']) ?></p>
+                <a href="../Vue/reservation_View.php?game=<?= urlencode($game['titre']) ?>"><button>Réserver</button></a>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Aucun jeu trouvé.</p>
+    <?php endif; ?>
 
-        <?php if (!empty($games)): ?>
-            <?php foreach ($games as $game): ?>
-                <div class="game-card">
-                    <h3><?= htmlspecialchars($game['titre']) ?></h3>
-                    <p><strong>Auteur :</strong> <?= htmlspecialchars($game['auteurs']) ?></p>
-                    <p><strong>Éditeur :</strong> <?= htmlspecialchars($game['editeurs']) ?></p>
-                    <p><strong>Année de publication :</strong> <?= htmlspecialchars($game['date_parution_debut']) ?></p>
-                    <p><strong>Nombre de joueurs :</strong> <?= htmlspecialchars($game['nombre_de_joueurs']) ?></p>
-                    <p><strong>Type de jeu :</strong> <?= htmlspecialchars($game['mecanisme']) ?></p>
-                    <a href="../Vue/reservation_View.php?game=<?= urlencode($game['titre']) ?>"><button>Réserver</button></a>
-                </div>
-            <?php endforeach; ?>
+    <nav class="pagination" style="text-align:center; margin: 20px 0;">
+    <?php
+    $maxPagesToShow = 5;
+    $half = floor($maxPagesToShow / 2);
+
+    // Calcul du début et fin des pages à afficher
+    $startPage = max(1, $page - $half);
+    $endPage = min($nbPages, $page + $half);
+
+    // Ajustement si on est proche du début ou de la fin
+    if ($page - $startPage < $half) {
+        $endPage = min($nbPages, $endPage + ($half - ($page - $startPage)));
+    }
+    if ($endPage - $page < $half) {
+        $startPage = max(1, $startPage - ($half - ($endPage - $page)));
+    }
+    ?>
+
+    <!-- Bouton Premier -->
+    <?php if ($page > 1): ?>
+        <a href="?page=1" style="margin-right:5px;">Premier</a>
+    <?php endif; ?>
+
+    <!-- Bouton Précédent -->
+    <?php if ($page > 1): ?>
+        <a href="?page=<?= $page - 1 ?>" style="margin-right:5px;">Précédent</a>
+    <?php endif; ?>
+
+    <!-- Pages numérotées -->
+    <?php for ($p = $startPage; $p <= $endPage; $p++): ?>
+        <?php if ($p == $page): ?>
+            <span style="font-weight:bold; margin: 0 5px;"><?= $p ?></span>
         <?php else: ?>
-            <p>Aucun jeu trouvé dans la base de données.</p>
-        <?php endif; ?>
-    </div>
 
+            <?php
+// Construit l'URL avec les paramètres
+$queryString = "?page=$p";
+if (!empty($query)) {
+    $queryString .= "&query=" . urlencode($query) . "&action=searchGame";
+}
+?>
+<a href="<?= $queryString ?>" style="margin: 0 5px;"><?= $p ?></a>
+            <?php endif; ?>
+    <?php endfor; ?>
+
+    <!-- Bouton Suivant -->
+    <?php if ($page < $nbPages): ?>
+        <a href="?page=<?= $page + 1 ?>" style="margin-left:5px;">Suivant</a>
+    <?php endif; ?>
+
+    <!-- Bouton Dernier -->
+    <?php if ($page < $nbPages): ?>
+        <a href="?page=<?= $nbPages ?>" style="margin-left:5px;">Dernier</a>
+    <?php endif; ?>
+    </nav>
+</div>
+    <!-- Ajoute ce bloc pagination ici -->
+    
     <footer class="footer">
         <p>
             <a href="../Vue/mentions.html">Mentions légales</a> |
@@ -194,9 +288,10 @@
                     if (menuOuvert.style.display === 'block') {
                         menuOuvert.style.display = 'none';
                     }
-                }
+                }   
             }
         }
+        
     </script>
 </body>
-</html>
+</html> 

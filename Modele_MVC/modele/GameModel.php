@@ -318,6 +318,114 @@ public function addGames($titreJeu, $dateParutionDebut, $dateParutionFin, $Nbjou
     $stmt->execute([':numero_etu' => $numero_etu]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+    public function getGamesByPage($offset, $limit) {
+    $sql = "SELECT * FROM jeux LIMIT :limit OFFSET :offset";
+    $stmt = $this->connection->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+public static function getGamesPaginated($connection, $offset, $limit, $order = 'ASC') {
+    // Sécurisation de l'ordre (éviter injection SQL)
+    $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
+
+    $sql = "
+        SELECT 
+    j.id_jeu,
+    j.titre,
+    j.date_parution_debut,
+    j.date_parution_fin,
+    j.information_date,
+    j.version,
+    COALESCE(j.nombre_de_joueurs::text, 'Nombre inconnu') AS nombre_de_joueurs,
+    j.age_indique,
+    j.mots_cles,
+    COALESCE(m.nom, 'Type inconnu') AS mecanisme,
+    STRING_AGG(DISTINCT COALESCE(a.nom, 'Auteur inconnu'), ', ') AS auteurs,
+    STRING_AGG(DISTINCT COALESCE(e.nom, 'Editeur inconnu'), ', ') AS editeurs
+FROM jeux j
+LEFT JOIN mecanisme m ON m.mecanisme_id = j.mecanisme_id
+LEFT JOIN jeuauteur ja ON ja.jeu_id = j.id_jeu
+LEFT JOIN auteur a ON a.auteur_id = ja.auteur_id
+LEFT JOIN jeuediteur je ON je.jeu_id = j.id_jeu
+LEFT JOIN editeur e ON e.editeur_id = je.editeur_id
+WHERE j.date_parution_debut IS NOT NULL
+AND j.date_parution_debut <> 'inconnue'
+GROUP BY 
+    j.id_jeu, j.titre, j.date_parution_debut, j.date_parution_fin,
+    j.information_date, j.version, j.nombre_de_joueurs, j.age_indique, 
+    j.mots_cles, m.nom
+ORDER BY j.date_parution_debut $order
+LIMIT :limit OFFSET :offset
+";
+
+    $requete = $connection->prepare($sql);
+    $requete->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    $requete->execute();
+
+    return $requete->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+public static function countGames($connection) {
+    $requete = $connection->prepare("SELECT COUNT(*) AS total
+FROM (
+    SELECT j.id_jeu
+    FROM jeux j
+    WHERE j.date_parution_debut IS NOT NULL
+    AND j.date_parution_debut <> 'inconnue'
+) AS subquery
+");
+    $requete->execute();
+    return $requete->fetchColumn();
+    return (int)$result['total'];
+
+}
+public static function getGamesByNamePaginated($connection, $query, $offset, $limit) {
+    $sql = "
+        SELECT 
+            j.id_jeu,
+            j.titre,
+            j.date_parution_debut,
+            j.date_parution_fin,
+            j.information_date,
+            j.version,
+            COALESCE(j.nombre_de_joueurs::text, 'Nombre inconnu') AS nombre_de_joueurs,
+            j.age_indique,
+            j.mots_cles,
+            COALESCE(m.nom, 'Type inconnu') AS mecanisme,
+            STRING_AGG(DISTINCT COALESCE(a.nom, 'Auteur inconnu'), ', ') AS auteurs,
+            STRING_AGG(DISTINCT COALESCE(e.nom, 'Editeur inconnu'), ', ') AS editeurs
+        FROM jeux j
+        LEFT JOIN mecanisme m ON m.mecanisme_id = j.mecanisme_id
+        LEFT JOIN jeuauteur ja ON ja.jeu_id = j.id_jeu
+        LEFT JOIN auteur a ON a.auteur_id = ja.auteur_id
+        LEFT JOIN jeuediteur je ON je.jeu_id = j.id_jeu
+        LEFT JOIN editeur e ON e.editeur_id = je.editeur_id
+        WHERE j.titre ILIKE :query
+        AND j.date_parution_debut IS NOT NULL
+        AND j.date_parution_debut <> 'inconnue'
+        GROUP BY 
+            j.id_jeu, j.titre, j.date_parution_debut, j.date_parution_fin,
+            j.information_date, j.version, j.nombre_de_joueurs, j.age_indique, 
+            j.mots_cles, m.nom
+        ORDER BY j.date_parution_debut ASC
+        LIMIT :limit OFFSET :offset
+    ";
+
+    $requete = $connection->prepare($sql);
+    $requete->bindValue(':query', "%$query%", PDO::PARAM_STR);
+    $requete->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $requete->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    $requete->execute();
+
+    return $requete->fetchAll(PDO::FETCH_ASSOC);
+}
 public function getAllUsers() {
     $sql = "SELECT * FROM utilisateurs";
     $stmt = $this->connection->prepare($sql);
@@ -368,4 +476,5 @@ public function deleteUser($userId) {
 }
 
 }
-?> 
+
+?>
