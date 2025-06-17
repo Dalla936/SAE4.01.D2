@@ -96,7 +96,6 @@ if ($query) {
             if (!$game) {
                 throw new Exception("Le jeu sélectionné n'existe pas dans la base de données.");
             }
-        //var_dump($game);
             $jeuId = $game[0]['id_jeu']; //faut faire un var_dump car les infos sont dans un tab associatif et sont dans $game[0]
         
             // Récupérer l'ID de la boîte associée au jeu
@@ -107,10 +106,15 @@ if ($query) {
             $boiteId = $boite['boite_id'];
         
             // Créer la réservation
+            if ($gameModel->isGameAvailable($boiteId, $startDate, $endDate)) {
             $gameModel->createPret($boiteId, $emprunteurId, $startDate, $endDate);
         
-            echo "Réservation effectuée avec succès !";
-        } catch (Exception $e) {
+            echo "Réservation effectuée avec succès !";}
+            else {
+                echo "<script>alert('Le jeu est déjà réservé.')</script>";
+            }
+         }
+        catch (Exception $e) {
             echo "Erreur lors de la réservation : " . $e->getMessage();
         }
     }

@@ -1,4 +1,6 @@
 <?php
+require '../modele/GameModel.php'; // Inclure le modèle
+session_start();
 // Récupérer le nom du jeu depuis l'URL
 $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
 ?>
@@ -94,7 +96,7 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
         <form action="../controleurs/index.php" method="post">
             <!-- Numéro étudiant -->
             <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" placeholder="Nom" required>
+            <input type="text" id="nom" name="nom" placeholder="Nom" value="<?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : ''; ?>"  readonly required>
 
             <label for="email">Email</label>
             <input type="text" id="email" name="email" placeholder="Email" required>

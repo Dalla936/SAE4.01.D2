@@ -475,6 +475,20 @@ public function deleteUser($userId) {
     }
 }
 
+public function isGameAvailable($boiteId, $dateEmprunt, $dateRetour) {
+    $query = "SELECT COUNT(*) FROM pret 
+              WHERE boite_id = :boite_id 
+              AND (
+                  (date_emprunt <= :date_retour AND date_retour >= :date_emprunt)
+              )";
+    $stmt = $this->connection->prepare($query);
+    $stmt->bindValue(':boite_id', $boiteId, PDO::PARAM_INT);
+    $stmt->bindValue(':date_emprunt', $dateEmprunt, PDO::PARAM_STR);
+    $stmt->bindValue(':date_retour', $dateRetour, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetchColumn() == 0; // Retourne true si la boite est disponible
+}
+
 }
 
 ?>
