@@ -145,7 +145,7 @@ header .search-bar button {
   align-items: center;
   justify-content: center;
   gap: 40px;
-  padding: 40px 500px;
+  padding: 40px 300px;
   background: url('../img/jeu2.png') center center / cover no-repeat;
   min-height: 600px;
 }
@@ -161,29 +161,35 @@ header .search-bar button {
   flex: 1;
   text-align: right;
   color: white;
+  display: flex; 
+  flex-direction: column; /* Empile les éléments verticalement */
+  align-items: center; /* Centre les éléments horizontalement */
 }
 
 .top-droite h1 {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 80px;
-  margin-bottom: 70px;
+  font-size: 40px;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
 .top-droite p {
-  font-size: 60px;
-  margin-bottom: 70px;
+  font-size: 25px;
+  margin-bottom: 40px;
+  
 }
 
 
 .top-droite .btn-orange {
   background-color: #FF972F;
   color: white;
-  padding: 12px 50px;
+  padding: 10px 50px;
   border-radius: 10px;
-  font-size: 40px;
+  font-size: 20px;
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s;
+  margin-top: 20px; /* Ajoute un espace entre le paragraphe et le bouton */
 }
 
 .top-droite .btn-orange:hover {
@@ -242,7 +248,7 @@ header .search-bar button {
 
 .actualites .actu-block {
   background-color: #2f3c62;
-  font-size: 25px;
+  font-size: 20px;
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
@@ -262,7 +268,7 @@ header .search-bar button {
 .jeu-card {
   background-color: #2f3c62;
   border-radius: 10px;
-  padding: 50px;
+  padding: 45px;
   flex: 1 1 45%; /* chaque carte prend environ 45% */
   text-align: center;
   transition: transform 0.3s;
@@ -275,15 +281,15 @@ header .search-bar button {
 }
 
 .jeu-card img {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
 }
 
 .jeu-card span {
   display: block;
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 10px;
-  font-size: 26px; /* ou 1.6em */
+  font-size: 20px; 
   font-weight: bold;
   color: white;
 }
@@ -312,17 +318,19 @@ footer p {
 
 
 .section-articles {
-  display: grid;
+  display: flex;
+  flex-direction: row;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 10px;
   padding: 0.5em;
-  perspective: 500px;
+  perspective: 100px;
 }
 
 .article {
   display: flex;
   flex-direction: column;
-  height: 300px;
+  height: 200px;
+  width: 300px;
   position: relative;
   background-size: cover;
   border-radius: 7px;
@@ -378,6 +386,7 @@ footer p {
 
 .article h1 span {
   color: white;
+  font-size: 20px;
 }
 
 .article h1 a {
