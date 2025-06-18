@@ -489,6 +489,39 @@ public function isGameAvailable($boiteId, $dateEmprunt, $dateRetour) {
     return $stmt->fetchColumn() == 0; // Retourne true si la boite est disponible
 }
 
+public function getGameReservationCount($jeuId) {
+    try {
+        // Récupère d'abord les boîtes correspondant à ce jeu
+        $query = "SELECT boite_id FROM boites WHERE jeu_id = :jeu_id";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindValue(':jeu_id', $jeuId, PDO::PARAM_INT);
+        $stmt->execute();
+        $boites = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        if (empty($boites)) {
+            return 0; // Pas de boîte pour ce jeu, donc pas de réservation
+        }
+        
+        // Compte le nombre de réservations actives pour ces boîtes
+        $placeholders = implode(',', array_fill(0, count($boites), '?'));
+        $query = "SELECT COUNT(*) FROM pret 
+                 WHERE boite_id IN ($placeholders)
+                 AND date_retour >= CURRENT_DATE";
+        
+        $stmt = $this->connection->prepare($query);
+        
+        // Bind des valeurs
+        foreach ($boites as $index => $boiteId) {
+            $stmt->bindValue($index + 1, $boiteId, PDO::PARAM_INT);
+        }
+        
+        $stmt->execute();
+        return $stmt->fetchColumn(); // Retourne le nombre de réservations
+    } catch (PDOException $e) {
+        // Gérer l'erreur
+        return 0;
+    }
+}
 }
 
 ?>
