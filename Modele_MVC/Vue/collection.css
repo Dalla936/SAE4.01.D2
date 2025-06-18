@@ -265,9 +265,20 @@ header .search-bar button {
     padding: 15px;
     margin-bottom: 20px;
     background-color: #2F4267;
-    
-    
+    position: relative;
+}
 
+.reservation-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #FF972F;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .game-card h3 {

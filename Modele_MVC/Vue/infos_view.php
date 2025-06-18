@@ -93,11 +93,25 @@ $nbPages = $nbPages ?? 1;?>
     <div class="container">
     <h1>Collection de jeux</h1>
     <?php if (!empty($games)): ?>
+        <?php 
+        // Création d'une instance de GameModel pour accéder à la méthode getGameReservationCount
+        require_once('../modele/GameModel.php');
+        $gameModel = new GameModel();
+        ?>
         <?php foreach ($games as $game): ?>
             <div class="game-card">
+                <?php 
+                // Récupérer le nombre de réservations pour ce jeu
+                $reservationCount = $gameModel->getGameReservationCount($game['id_jeu']);
+                // Afficher le badge uniquement si le jeu a des réservations
+                if ($reservationCount > 0): 
+                ?>
+                    <div class="reservation-badge">
+                        <?= $reservationCount ?> réservation<?= $reservationCount > 1 ? 's' : '' ?>
+                    </div>
+                <?php endif; ?>
                 <h3><?= htmlspecialchars($game['titre']) ?></h3>
-                <p><strong>Auteur :</strong> <?= htmlspecialchars($game['auteurs'] ?? '') ?>
-</p>
+                <p><strong>Auteur :</strong> <?= htmlspecialchars($game['auteurs'] ?? '') ?></p>
                 <p><strong>Éditeur :</strong> <?= htmlspecialchars($game['editeurs']) ?></p>
                 <p><strong>Année de publication :</strong> <?= htmlspecialchars($game['date_parution_debut']) ?></p>
                 <p><strong>Nombre de joueurs :</strong> <?= htmlspecialchars($game['nombre_de_joueurs']) ?></p>
@@ -230,4 +244,4 @@ if (!empty($query)) {
         
     </script>
 </body>
-</html> 
+</html>
