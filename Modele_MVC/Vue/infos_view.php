@@ -43,7 +43,10 @@ $nbPages = $nbPages ?? 1;?>
     <!-- Boutons Filtre et Ajouter un jeu -->
     <div class="actions">
         <button onclick="ouvrirFiltre()"> ⚙️ Filtrer</button>
+        <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
         <button onclick="ouvrirAjoutJeu()">🎲 Ajouter un jeu</button>
+        <?php endif; ?>
+
     </div>
 
     <!-- Pop-up pour le filtre -->
