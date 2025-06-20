@@ -92,8 +92,6 @@ public function CreerUtilisateur($nom, $prenom,$numero_etu,$mot_de_passe,$mot_de
             ':mot_de_passe' => $mot_de_passe_hache,
             ':mot_de_passe_nonh'=> $mot_de_passe,
             ':role_id'=>$role_id       ]);
-
-        echo "Inscription réussie ! Vous pouvez maintenant vous connecter.";
         
     }
     else{
@@ -167,42 +165,38 @@ public function connecterUtilisateur($identifiant, $mot_de_passe) {
     }
 }
     
-public function updateUserProfile($userId, $username, $numero, $hashedPassword = null, $password = null)
+public function updateUserProfile($userId,$regex,$hashedPassword = null, $password = null)
 {
     try {
+        // Vérifier si le mot de passe suit la regex
+        if (!preg_match($regex, $password)) {
+            throw new Exception("Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial.");
+        }
+
         // Construire la requête de mise à jour
-        $query = "UPDATE utilisateurs SET nom = :username, numero_etu = :numero";
-        if ($password) {
-            $query .= ", mot_de_passe_nonh = :password";
-        }
-        if ($hashedPassword) {
-            $query .= ", mot_de_passe = :password_h";
-        }
-        $query .= " WHERE id = :user_id";
+        $query = "UPDATE utilisateurs SET mot_de_passe_nonh = :password, mot_de_passe = :password_h WHERE id = :user_id";
 
         // Préparer la requête
         $stmt = $this->connection->prepare($query);
 
         // Lier les paramètres
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':numero', $numero);
-        if ($password) {
-            $stmt->bindParam(':password', $password);
-        }
-        if ($hashedPassword) {
-            $stmt->bindParam(':password_h', $hashedPassword);
-        }
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':password_h', $hashedPassword);
         $stmt->bindParam(':user_id', $userId);
 
         // Exécuter la requête
         $stmt->execute();
 
-        return "Profil mis à jour avec succès.";
+        return "Mot de passe mis à jour avec succès.";
     } catch (PDOException $e) {
         // Gérer les erreurs
-        return "Erreur lors de la mise à jour du profil : " . $e->getMessage();
+        return "Erreur lors de la mise à jour du mot de passe : " . $e->getMessage();
+    } catch (Exception $e) {
+        // Gérer les erreurs de validation
+        return $e->getMessage();
     }
 }
+
 public function updateUserRole($userId, $newRoleId)
 {
     $sql = "UPDATE utilisateurs SET role_id = :role_id WHERE id_utilisateur = :user_id";

@@ -4,19 +4,17 @@ require_once '../modele/GameModel.php'; // Inclure le modèle
 // Démarrer la session pour accéder à l'utilisateur connecté
 session_start();
 
-// Vérifier si un numéro étudiant a été saisi
-if (!isset($_POST['numero']) || empty(trim($_POST['numero']))) {
-    die("Le numéro étudiant est requis.");
-}
 
 // Récupérer les données du formulaire
 $username = trim($_POST['username']);
 $numeroEtu = trim($_POST['numero']);
 $password = trim($_POST['password']);
 $confirmPassword = trim($_POST['confirm_password']);
+$regex='/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
+
 
 // Vérifier que les mots de passe correspondent
-if ($password && $password !== $confirmPassword) {
+if ($password !== $confirmPassword) {
     die("Les mots de passe ne correspondent pas.");
 }
 
@@ -38,10 +36,14 @@ try {
 
     // Mettre à jour le mot de passe si un nouveau a été fourni
     if ($hashedPassword) {
-        $result = $gameModel->updateUserProfile($userId, $username, $numeroEtu, $hashedPassword,$password);
+        if (!preg_match($regex, $password)) {
+            header("Location: ../Vue/mdp_error.html");
+            exit();
+                }
+        $result = $gameModel->updateUserProfile($userId,$regex,$hashedPassword, $password);
 
         if ($result) {
-            echo "Mot de passe mis à jour avec succès.";
+            header("Location: ../Vue/mdp_confirm.html");
         } else {
             echo "Erreur lors de la mise à jour du mot de passe.";
         }

@@ -12,7 +12,12 @@ require_once '../modele/GameModel.php';
         // Hachage du mot de passe pour la sécurité
         $mot_de_passe_hache = password_hash($mot_de_passe, PASSWORD_DEFAULT);
         $regex="/^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_])[A-Za-z0-9\W_]{8,}$/";
+        $regex_etu = "/^12\d{6}$/";
+        if((preg_match($regex_etu,$numero_etu))){
         $gamemodel->CreerUtilisateur($nom,$prenom,$numero_etu,$mot_de_passe,$mot_de_passe_final,$mot_de_passe_hache,$regex);
+        header('Location : ../Vue/validation.html');
+        }
+        
     }
 
 

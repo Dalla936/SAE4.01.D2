@@ -28,7 +28,7 @@
             <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
 
             <div class="menu-deroulant" id="menuDeroulant">
-                <a href="gestion_profil.html">Gestion du profil</a>
+                <a href="../Vue/compte.php">Gestion du profil</a>
                 <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
             <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
         <?php endif; ?>
@@ -36,6 +36,8 @@
             </div>
         </div>
     </header>
+
+    <div class="flou"></div>
 
     <div class="container">
         <h1 style="color :white;">Gestion de Compte</h1>
@@ -66,8 +68,9 @@
                 
                     <button type="submit" class="btn-submit" href="../Vue/accueil.html">Mettre à jour</button>
                 </form>
-                
+
         </section>
+
     </div>
 
     <script>
