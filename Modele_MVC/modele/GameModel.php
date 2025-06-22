@@ -70,10 +70,8 @@ COALESCE(string_agg(DISTINCT COALESCE(auteur.nom, 'Auteur inconnu'), ', '), 'Auc
             WHERE jeux.titre ILIKE :name
             GROUP BY jeux.id_jeu, jeux.titre, jeux.date_parution_debut, jeux.date_parution_fin, 
                      jeux.information_date, jeux.version, jeux.nombre_de_joueurs, 
-                     jeux.age_indique, jeux.mots_cles, mecanisme.nom";
-
-    $stmt = $this->connection->prepare($sql);
-    $searchTerm = $name . '%'; // Rechercher les jeux qui commencent par $name
+                     jeux.age_indique, jeux.mots_cles, mecanisme.nom";    $stmt = $this->connection->prepare($sql);
+    $searchTerm = '%' . $name . '%'; // Rechercher les jeux qui contiennent $name (plus flexible)
     $stmt->bindParam(':name', $searchTerm);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupérer tous les jeux correspondant de la bd  grace au fetchAll
@@ -495,13 +493,10 @@ public function getGameReservationCount($jeuId) {
         if (empty($boites)) {
             return 0; // Pas de boîte pour ce jeu, donc pas de réservation
         }
-        
-        // Compte le nombre de réservations actives pour ces boîtes
+          // Compte le nombre total de réservations pour ces boîtes (historique complet)
         $placeholders = implode(',', array_fill(0, count($boites), '?'));
         $query = "SELECT COUNT(*) FROM pret 
-                 WHERE boite_id IN ($placeholders)
-                 AND date_retour >= CURRENT_DATE";
-        
+                 WHERE boite_id IN ($placeholders)";
         $stmt = $this->connection->prepare($query);
         
         // Bind des valeurs
@@ -509,12 +504,68 @@ public function getGameReservationCount($jeuId) {
             $stmt->bindValue($index + 1, $boiteId, PDO::PARAM_INT);
         }
         
-        $stmt->execute();
-        return $stmt->fetchColumn(); // Retourne le nombre de réservations
+        $stmt->execute();        return $stmt->fetchColumn(); // Retourne le nombre de réservations
     } catch (PDOException $e) {
         // Gérer l'erreur
         return 0;
     }
+}
+
+/**
+ * Retourne les jeux les plus populaires basés sur le nombre total de réservations (historique complet)
+ * Cette méthode est utilisée pour générer le podium des jeux populaires
+ */
+public function getMostPopularGames($limit = 3) {
+    try {
+        // Récupérer tous les jeux avec leur nombre total de réservations (historique complet)
+        $query = "
+            SELECT 
+                j.id_jeu, 
+                j.titre, 
+                COUNT(p.pret_id) AS reservation_count
+            FROM 
+                jeux j
+                JOIN boites b ON j.id_jeu = b.jeu_id
+                LEFT JOIN pret p ON b.boite_id = p.boite_id
+            GROUP BY 
+                j.id_jeu, j.titre
+            ORDER BY 
+                reservation_count DESC
+            LIMIT :limit";
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Gérer l'erreur
+        return [];
+    }
+}
+public static function countGamesByName($connection, $query) {
+    $sql = "
+        SELECT COUNT(*) FROM (
+            SELECT 
+                j.id_jeu
+            FROM jeux j
+            LEFT JOIN mecanisme m ON m.mecanisme_id = j.mecanisme_id
+            LEFT JOIN jeuauteur ja ON ja.jeu_id = j.id_jeu
+            LEFT JOIN auteur a ON a.auteur_id = ja.auteur_id
+            LEFT JOIN jeuediteur je ON je.jeu_id = j.id_jeu
+            LEFT JOIN editeur e ON e.editeur_id = je.editeur_id
+            WHERE j.titre ILIKE :query
+            AND j.date_parution_debut IS NOT NULL
+            AND j.date_parution_debut <> 'inconnue'
+            GROUP BY 
+                j.id_jeu
+        ) AS subquery
+    ";
+
+    $requete = $connection->prepare($sql);
+    $requete->bindValue(':query', "%$query%", PDO::PARAM_STR);
+    $requete->execute();
+    return $requete->fetchColumn();
 }
 }
 
