@@ -38,10 +38,12 @@ if ($action === "searchGame" && !empty($query)) {
     if ($page > $nbPages) $page = $nbPages;
 
     $offset = ($page - 1) * $jeuxParPage;
-    $games = GameModel::getGamesByNamePaginated($connection, $query, $offset, $jeuxParPage);
-
-    if (empty($games)) {
-        $errorMessage = "Aucun jeu trouvé.";
+    
+    if ($nbJeux > 0) {
+        $games = GameModel::getGamesByNamePaginated($connection, $query, $offset, $jeuxParPage);
+    } else {
+        $games = [];
+        $errorMessage = "Aucun jeu trouvé correspondant à \"" . htmlspecialchars($query) . "\".";
     }
 } elseif ($bouton === 'validation' && $tri) {
     // Tri, pas paginé ici, tu peux l’ajouter plus tard si tu veux

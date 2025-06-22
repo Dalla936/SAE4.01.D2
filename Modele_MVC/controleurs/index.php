@@ -22,7 +22,7 @@ $nbPages = 1;
 
 if ($query) {
     // Compter le nombre de résultats correspondant à la recherche
-    $nbJeux = GameModel::countGames($connection);
+    $nbJeux = GameModel::countGamesByName($connection, $query);
     $nbPages = max(1, ceil($nbJeux / $jeuxParPage));
     if ($page > $nbPages) $page = $nbPages;
 
@@ -57,16 +57,21 @@ if ($query) {
         if (isset($_POST['date-range'])) {
             $dateRange = $_POST['date-range']; // "16/01/2025 au 19/01/2025"
         
-            // Séparation des dates en utilisant " au "
-            $dates = explode(" au ", $dateRange);
+            // Séparation des dates en utilisant " au "            $dates = explode(" au ", $dateRange);
         
             if (count($dates) === 2) {
-                $startDate = $dates[0]; // "16/01/2025"
-                $endDate = $dates[1];   // "19/01/2025"
+                $startDate = $dates[0]; // "16/01/2025" or "2025-01-16"
+                $endDate = $dates[1];   // "19/01/2025" or "2025-01-19"
         
-                // Conversion en format compatible avec PHP (Y-m-d)
-                $startDateFormatted = DateTime::createFromFormat('d/m/Y', $startDate);
-                $endDateFormatted = DateTime::createFromFormat('d/m/Y', $endDate);
+                // Essayer d'abord le format Y-m-d (format SQL)
+                $startDateFormatted = DateTime::createFromFormat('Y-m-d', $startDate);
+                $endDateFormatted = DateTime::createFromFormat('Y-m-d', $endDate);
+                
+                // Si ça ne fonctionne pas, essayer le format d/m/Y (format français)
+                if (!$startDateFormatted || !$endDateFormatted) {
+                    $startDateFormatted = DateTime::createFromFormat('d/m/Y', $startDate);
+                    $endDateFormatted = DateTime::createFromFormat('d/m/Y', $endDate);
+                }
         
                 if ($startDateFormatted && $endDateFormatted) {
                     $startDateSQL = $startDateFormatted->format('Y-m-d'); // Format SQL
@@ -109,7 +114,7 @@ if ($query) {
             if ($gameModel->isGameAvailable($boiteId, $startDate, $endDate)) {
             $gameModel->createPret($boiteId, $emprunteurId, $startDate, $endDate);
         
-            echo "Réservation effectuée avec succès !";}
+            }
             else {
                 echo "<script>alert('Le jeu est déjà réservé.')</script>";
             }

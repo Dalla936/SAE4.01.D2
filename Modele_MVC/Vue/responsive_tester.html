@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Responsive Design</title>
+    <link rel="stylesheet" href="accueil_styles.css">
+    <style>
+        .viewport-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-controls button {
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #FF972F;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .test-controls button:hover {
+            background-color: #e67e1d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Affichage de la taille de l'écran en temps réel -->
+    <div class="viewport-info" id="viewportInfo">
+        Largeur: <span id="screenWidth"></span>px<br>
+        Hauteur: <span id="screenHeight"></span>px<br>
+        Media Query active: <span id="activeMediaQuery"></span>
+    </div>
+
+    <!-- Boutons de test pour simuler différentes tailles d'écran -->
+    <div class="test-controls">
+        <h3>Tester différentes tailles d'écran</h3>
+        <button onclick="simulateScreen(1920, 1080)">Desktop (1920×1080)</button>
+        <button onclick="simulateScreen(1366, 768)">Laptop (1366×768)</button>
+        <button onclick="simulateScreen(1024, 768)">Tablet (1024×768)</button>
+        <button onclick="simulateScreen(768, 1024)">Tablet Portrait (768×1024)</button>
+        <button onclick="simulateScreen(414, 896)">Mobile Large (414×896)</button>
+        <button onclick="simulateScreen(375, 667)">Mobile Medium (375×667)</button>
+        <button onclick="simulateScreen(320, 568)">Mobile Small (320×568)</button>
+        <br>
+        <button onclick="toggleHighlightElements()">Mettre en évidence les éléments</button>
+        <button onclick="toggleGridOverlay()">Afficher la grille</button>
+        <button onclick="openOriginalPage()">Page d'origine</button>
+    </div>
+    
+    <!-- Inclure une iframe avec la page d'origine pour tester -->
+    <iframe id="testFrame" style="border: none; width: 100%; height: 100vh;" src="accueil.html"></iframe>
+
+    <script>
+        // Mettre à jour les informations de viewport en temps réel
+        function updateViewportInfo() {
+            document.getElementById('screenWidth').textContent = window.innerWidth;
+            document.getElementById('screenHeight').textContent = window.innerHeight;
+            
+            // Déterminer quelle media query est active
+            let activeQuery = "Desktop (default)";
+            if (window.innerWidth <= 480) {
+                activeQuery = "Mobile Small (max-width: 480px)";
+            } else if (window.innerWidth <= 768) {
+                activeQuery = "Mobile/Tablet (max-width: 768px)";
+            } else if (window.innerWidth <= 1024) {
+                activeQuery = "Tablet/Small Desktop (max-width: 1024px)";
+            }
+            document.getElementById('activeMediaQuery').textContent = activeQuery;
+        }
+
+        // Simuler différentes tailles d'écran
+        function simulateScreen(width, height) {
+            const frame = document.getElementById('testFrame');
+            frame.style.width = width + 'px';
+            frame.style.height = height + 'px';
+            updateViewportInfo();
+        }
+
+        // Mettre en évidence les éléments pour voir la structure
+        function toggleHighlightElements() {
+            const frame = document.getElementById('testFrame').contentWindow.document;
+            const style = frame.createElement('style');
+            style.id = 'highlight-elements';
+            
+            if (!frame.getElementById('highlight-elements')) {
+                style.textContent = `
+                    * {
+                        outline: 1px solid rgba(255, 0, 0, 0.3) !important;
+                    }
+                    div, section, header, footer, nav {
+                        background-color: rgba(255, 255, 0, 0.1) !important;
+                    }
+                `;
+                frame.head.appendChild(style);
+            } else {
+                const existingStyle = frame.getElementById('highlight-elements');
+                existingStyle.parentNode.removeChild(existingStyle);
+            }
+        }
+
+        // Ajouter une grille pour vérifier l'alignement
+        function toggleGridOverlay() {
+            const frame = document.getElementById('testFrame').contentWindow.document;
+            const style = frame.createElement('style');
+            style.id = 'grid-overlay';
+            
+            if (!frame.getElementById('grid-overlay')) {
+                style.textContent = `
+                    body::before {
+                        content: "";
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: 
+                            linear-gradient(90deg, rgba(255,0,0,.1) 1px, transparent 1px),
+                            linear-gradient(rgba(255,0,0,.1) 1px, transparent 1px);
+                        background-size: 20px 20px;
+                        pointer-events: none;
+                        z-index: 9999;
+                    }
+                `;
+                frame.head.appendChild(style);
+            } else {
+                const existingStyle = frame.getElementById('grid-overlay');
+                existingStyle.parentNode.removeChild(existingStyle);
+            }
+        }
+
+        // Ouvrir la page d'origine directement
+        function openOriginalPage() {
+            window.location.href = 'accueil.html';
+        }
+
+        // Initialiser
+        window.onload = updateViewportInfo;
+        window.onresize = updateViewportInfo;
+    </script>
+</body>
+</html>

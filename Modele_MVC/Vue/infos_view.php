@@ -13,17 +13,15 @@ $nbPages = $nbPages ?? 1;?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"> <!-- css de la bibliothèque flatpick-->
 </head>
 
-<body>
-    <header>
-        <a href="../Vue/accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
+<body>    <header>
+        <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
         <nav>
             <a href="../Vue/documentation.html">Documentation</a>
             <a href="../controleurs/info.php">Collection</a>
             <a href="../Vue/reservation_View.php">Réservation</a>
-            <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
-        </nav>
+            <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a></nav>
         <div class="search-bar">
-            <form action="../controleurs/index.php" method="get">
+            <form action="../controleurs/info.php" method="get">
                 <input type="hidden" name="action" value="searchGame">
                 <input type="text" name="query" placeholder="Rechercher un jeu..." required>
                 <button type="submit">🔍</button>
@@ -88,10 +86,15 @@ $nbPages = $nbPages ?? 1;?>
                 <button type="button" onclick="fermerAjoutJeu()">Annuler</button>
             </form>
         </div>
-    </div>
-
-    <div class="container">
+    </div>    <div class="container">
     <h1>Collection de jeux</h1>
+    
+    <?php if (!empty($errorMessage)): ?>
+        <div class="error-message" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+            <?= htmlspecialchars($errorMessage) ?>
+        </div>
+    <?php endif; ?>
+    
     <?php if (!empty($games)): ?>
         <?php 
         // Création d'une instance de GameModel pour accéder à la méthode getGameReservationCount
