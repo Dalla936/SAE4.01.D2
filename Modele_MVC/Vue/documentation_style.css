@@ -1,244 +1,339 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+  --primary: #14213d;      /* Bleu foncé */
+  --secondary: #1f2a48;    /* Variante bleu foncé */
+  --accent: #FF972F;       /* Orange vif */
+  --bg: #14213d;           /* Fond général */
+  --card-bg: #1a2540;      /* Fond carte plus clair */
+  --white: #fff;
+  --gray: #e5e9f2;
+  --text: #fff;
+  --footer: #1f2a48;
 }
 
-/* Header */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* HEADER */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #293358;
-    padding: 10px 20px;
+  background: var(--primary);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 8px 32px 0 rgba(20,33,61,0.25), 0 1.5px 0 0 #22305a;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
 }
 
 header a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    margin: 0 10px;
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+header a:hover {
+  color: var(--accent);
 }
 
 header img {
-    height: 40px;
+  height: 48px;
+  margin-right: 24px;
 }
+
 nav {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 28px;
 }
 
-nav a {
-    margin: 0 10px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-
-/* Barre de recherche dans le header */
-header .search-bar {
-    display: flex;
-    align-items: center;
-    background-color: #444;
-    border-radius: 25px; 
-    padding: 1px 30px; 
-}
-
-header .search-bar input {
-    border: none;
-    background: none;
-    color: white;
-    outline: none;
-    padding: 10px 15px;
-    width: 200px;
-    font-size: 16px; 
-    border-radius: 20px;
-}
-
-header .search-bar button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px; 
-    cursor: pointer;
-    margin-left: 15px; 
-}
-
-
-/* Style pour la section du profil utilisateur */
-.profil-utilisateur {
-    position: relative;
-    display: inline-block;
-}
-
-/* Style pour l'icône utilisateur */
-/* Style pour la section du profil utilisateur */
-.profil-utilisateur {
-    position: relative;
-    display: inline-block;
-}
-
-/* Style pour l'image de l'icône utilisateur */
-.icone-utilisateur {
-    cursor: pointer;
-    width: 40px; /* Ajustez la taille selon vos besoins */
-    height: 40px;
-    border-radius: 50%; /* Pour un rendu circulaire */
-    object-fit: cover; /* Ajuste l'image pour qu'elle remplisse le cadre */
-    border: 2px solid #ccc; /* Optionnel : ajoute une bordure */
-}
-
-/* Style pour le menu déroulant */
-.menu-deroulant {
-    display: none; /* Caché par défaut */
-    position: absolute;
-    right: 0;
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-/* Style des liens dans le menu déroulant */
-.menu-deroulant a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Effet hover sur les liens du menu */
-.menu-deroulant a:hover {
-    background-color: #f1f1f1;
-}
-.bouton-deconnexion {
-    background-color: #ff4d4d; /* Couleur rouge pour indiquer la déconnexion */
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: block;
-    width: 100%; /* Prend toute la largeur pour un rendu homogène */
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 4px; /* Coins légèrement arrondis */
-    margin-top: 8px; /* Espace entre les liens et le bouton */
-    transition: background-color 0.3s ease; /* Animation pour l'effet hover */
-}
-
-.bouton-deconnexion:hover {
-    background-color: #d93636; /* Couleur plus sombre au survol */
-}
-
-/* Main Content Styles */
-main {
-    text-align: center;
-    padding: 100px 30px;
-}
-
-
-
-.documentation{
-    display: block;
-    background-color: #bbbbbb;
-    border-radius: 1%;
-    box-shadow:10px 5px 5px  rgba(0, 0, 0, 0.5);
-    padding-bottom: auto;
-    padding-top: 2px;
-
-}
-
-
-.documentation h1 {
-    font-size: 36px;
-    color: #333;
-    margin-bottom: 20px;
-
-}
-
-.documentation p {
-    text-align: justify;
-    padding-left: 150px;
-    padding-right: 150px;
-}
-
-.documentation .rule-card {
-    background-color: #1A2945;
-    color: white;
-    margin: 30px ;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 200px;
-    box-shadow:10px 5px 5px rgba(0, 0, 0, 0.5);
-    font-size: 18px;
-    text-align: center;
-    display: inline-block;
-}
-
-.documentation .rule-card img{
-    width: 200px;
-    height: 150px;
-    max-width: 200px;
-    max-height:200px ;
-}
-
-.documentation .rule-card:hover {
-    background-color: #0f1624;
-    transform: scale(1.02);
-    transition: all 0.3s ease-in-out;
-}
-
-/* Search Bar Styles */
 .search-bar {
-    margin-top: 30px;
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border-radius: 24px;
+  padding: 2px 18px;
+  margin-left: 24px;
 }
 
 .search-bar input {
-    padding: 10px;
-    width: 80%;
-    max-width: 500px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  outline: none;
+  padding: 10px 8px;
+  width: 170px;
+  font-size: 15px;
+  font-family: inherit;
 }
 
 .search-bar button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+  background: var(--accent);
+  border: none;
+  color: var(--white);
+  font-size: 18px;
+  border-radius: 24px;
+  padding: 8px 18px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
 }
 
 .search-bar button:hover {
-    background-color: #555;
+  background: #ffb066;
+  color: var(--primary);
 }
 
-/* Footer Styles */
-footer {
-    text-align: center;
-    padding: 10px 0;
-    background-color: #293358;
-    color: #333;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+/* Profil utilisateur */
+.profil-utilisateur {
+  position: relative;
+  margin-left: 24px;
+}
+
+.icone-utilisateur {
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  transition: box-shadow 0.2s;
+}
+
+.icone-utilisateur:hover {
+  box-shadow: 0 0 0 4px #ff972f33;
+}
+
+.menu-deroulant {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 54px;
+  background: var(--white);
+  box-shadow: 0 8px 24px rgba(20,33,61,0.12);
+  border-radius: 12px;
+  min-width: 180px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.menu-deroulant a,
+.menu-deroulant button {
+  color: var(--primary);
+  padding: 14px 20px;
+  text-decoration: none;
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-deroulant a:hover,
+.menu-deroulant button:hover {
+  background: var(--gray);
+}
+
+.bouton-deconnexion {
+  background: var(--accent);
+  color: var(--white);
+  border-radius: 0 0 12px 12px;
+  font-weight: 600;
+  margin-top: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.bouton-deconnexion:hover {
+  background: #ffb066;
+  color: var(--primary);
+}
+
+/* MAIN */
+main {
+  flex: 1 0 auto;
+  padding: 48px 16px 80px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.documentation {
+  background: var(--card-bg);
+  border-radius: 28px;
+  box-shadow: 0 8px 40px 0 rgba(20,33,61,0.18);
+  padding: 40px 32px 48px 32px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 48px auto 0 auto;
+  /* Ajoute une transition douce si besoin */
+  transition: box-shadow 0.3s, background 0.3s;
+}
+
+.documentation h1 {
+  font-size: 2.6rem;
+  color: var(--white);
+  margin-bottom: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.documentation p {
+  text-align: justify;
+  margin-bottom: 18px;
+  font-size: 1.08rem;
+  color: var(--white);
+  line-height: 1.7;
+}
+
+.documentation h2 {
+  color: var(--accent);
+  font-size: 1.4rem;
+  margin: 32px 0 18px 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* RULES GRID */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+  justify-items: center;
+  margin-top: 18px;
+}
+
+.rule-card {
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(20,33,61,0.15);
+  padding: 24px 12px 18px 12px;
+  max-width: 260px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s, color 0.25s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid #22305a; /* Ajoute une bordure subtile */
+}
+
+.rule-card img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: var(--white);
+  transition: transform 0.25s;
+}
+
+.rule-card span {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 4px;
+  letter-spacing: 0.2px;
+}
+
+.rule-card:hover {
+  background: var(--accent);
+  color: var(--primary);
+  transform: translateY(-8px) scale(1.035);
+  box-shadow: 0 8px 32px rgba(255,151,47,0.18);
+  border-color: var(--accent);
+}
+
+.rule-card:hover img {
+  transform: scale(1.07) rotate(-2deg);
+}
+
+/* FOOTER */
+footer.footer {
+  background: var(--primary);
+  color: var(--white);
+  text-align: center;
+  padding: 18px 0 12px 0;
+  font-size: 1rem;
+  border-radius: 24px 24px 0 0;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 100;
+  box-shadow: 0 -2px 12px rgba(20,33,61,0.08);
 }
 
 .footer a {
-    color: white;
-    text-decoration: none;
+  color: var(--accent);
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.2s;
+}
+
+.footer a:hover {
+  color: var(--white);
+  text-decoration: underline;
 }
 
 footer p {
-    margin: 5px 0;
+  margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 10px;
+    gap: 10px;
+  }
+  nav, .search-bar, .profil-utilisateur {
+    margin: 10px 0 0 0;
+  }
+  .documentation {
+    padding: 18px 6px 32px 6px;
+  }
+}
+
+@media (max-width: 650px) {
+  .documentation {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 10px 2px 80px 2px;
+  }
+  .rules-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  header {
+    border-radius: 0 0 18px 18px;
+    padding: 10px 4px;
+  }
+  footer.footer {
+    border-radius: 18px 18px 0 0;
+    font-size: 0.95rem;
+    padding: 12px 0 8px 0;
+  }
 }

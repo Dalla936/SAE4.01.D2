@@ -61,6 +61,7 @@ $roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
 
   <section class="bot-section">
     <div class="jeux">
+      <h2>Jeux Populaires : </h2>
       <?php
       // Créer le podium directement en PHP plutôt qu'en JavaScript
       $gameModel = new GameModel();
@@ -100,7 +101,7 @@ $roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
               echo '<div class="podium-title">';              if (isset($popularGames[$position])) {
                   // Utiliser urlencode pour garantir que les caractères spéciaux sont correctement gérés
                   $encodedTitle = urlencode($gameTitle);
-                  echo '<a href="../controleurs/info.php?action=searchGame&query=' . $encodedTitle . '" style="color: #333; text-decoration: none; font-weight: bold;">' . htmlspecialchars($gameTitle) . '</a>';
+                  echo '<a href="../controleurs/info.php?action=searchGame&query=' . $encodedTitle . '" style="color: white; text-decoration: none; font-weight: bold;">' . htmlspecialchars($gameTitle) . '</a>';
               } else {
                   echo htmlspecialchars($gameTitle);
               }
@@ -129,17 +130,7 @@ $roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
       echo '</div>'; // fin top-jeux
       ?>
       
-      <h2>Jeux Populaires : </h2>
-      <div class="ligne-jeux">
-        <div class="jeu-card">
-          <img src="../img/uno.jpg" alt="Uno">
-          <span>Uno</span>
-        </div>
-        <div class="jeu-card">
-          <img src="../img/TimesUp.png" alt="Time's Up">
-          <span>Time's Up</span>
-        </div>
-      </div>
+      
     </div>
 
     <div class="actualites">

@@ -35,6 +35,7 @@
     width: 100%;
 }
 
+
 .podium-number {
     width: 30px;
     height: 30px;
@@ -82,7 +83,7 @@
 
 .podium-reservations {
     font-size: 0.9rem;
-    color: #6c757d;
+    color: white;
     margin-bottom: 5px;
     text-align: center;
 }
@@ -113,7 +114,7 @@
 }
 
 .top-jeux {
-    background-color: white;
+    background-color: #2f3c62;
     border-radius: 10px;
     padding: 20px;
     margin-top: 20px;
@@ -126,7 +127,7 @@
 }
 
 .top-jeux h2 {
-    color: #333;
+    color: white;
     margin-bottom: 20px;
     text-align: center;
     position: relative;
