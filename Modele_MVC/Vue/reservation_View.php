@@ -36,9 +36,12 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
             <button type="submit">🔍</button>
         </form>
     </div>
-    <div class="profil-utilisateur" id="profilUtilisateur">
-    <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
+    <div class="zone-utilisateur">
 
+        <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
+
+
+    <div class="profil-utilisateur" id="profilUtilisateur">
       <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
       <div class="menu-deroulant" id="menuDeroulant">
         <a href="../Vue/compte.php">Gestion du profil</a>
@@ -49,6 +52,8 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
         <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
       </div>
     </div>
+    </div>
+
 </header>
 
 <!-- Main content -->
