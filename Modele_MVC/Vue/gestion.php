@@ -64,7 +64,7 @@ if (isset($_POST['update_game'])) {
       <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
     </nav>
     <div class="search-bar">
-      <form action="../controleurs/" method="get">
+      <form action="../controleurs/index.php" method="get">
         <input type="hidden" name="action" value="searchGame" />
         <input type="text" name="query" placeholder="Rechercher un jeu..." required />
         <button type="submit">🔍</button>
