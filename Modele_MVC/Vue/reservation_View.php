@@ -1,6 +1,10 @@
 <?php
 require '../modele/GameModel.php'; // Inclure le modèle
 session_start();
+if(!isset($_SESSION['role_id']) ||($_SESSION['role_id'] != 2 && $_SESSION['role_id'] != 3 && $_SESSION['role_id'] != 1)) {
+    header("Location: ../Vue/connexion.html");
+    exit;
+}
 // Récupérer le nom du jeu depuis l'URL
 $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
 ?>
@@ -9,55 +13,10 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="reservation_styles.css">
+    <link rel="stylesheet" href="../Vue/reservation_styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <title>Réservation - Sorbonne Paris Nord</title>
-    <style>
-        /* Styles pour le menu déroulant */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #fff;
-            min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a, .dropdown-content button {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            background: none;
-            border: none;
-            text-align: left;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .dropdown-content a:hover,
-        .dropdown-content button:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #ddd;
-        }
-    </style>
+    
 </head>
 <body>
 
@@ -77,15 +36,15 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
             <button type="submit">🔍</button>
         </form>
     </div>
-    <div class="dropdown">
-        <img src="../img/profile.png" alt="Icône Profil">
-        <div class="dropdown-content">
-            <a href="compte.php">Gestion du compte</a>
-            <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
+    <div class="profil-utilisateur" id="profilUtilisateur">
+      <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
+      <div class="menu-deroulant" id="menuDeroulant">
+        <a href="../Vue/compte.php">Gestion du profil</a>
+        <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
             <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
         <?php endif; ?>
         <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
-        </div>
+      </div>
     </div>
 </header>
 
@@ -154,6 +113,28 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
             }
         }
     });
+
+        // Fonction pour basculer l'affichage du menu déroulant
+        function basculerMenuDeroulant() {
+        const menuDeroulant = document.getElementById('menuDeroulant');
+        // Si le menu est affiché, le cacher, sinon l'afficher
+        menuDeroulant.style.display = menuDeroulant.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Fermer le menu déroulant si l'utilisateur clique en dehors
+    window.onclick = function(event) {
+        // Vérifie si l'élément cliqué n'est pas l'icône de l'utilisateur
+        if (!event.target.matches('.icone-utilisateur')) {
+            const menusDeroulants = document.getElementsByClassName('menu-deroulant');
+            // Parcourt tous les menus déroulants pour les cacher
+            for (let i = 0; i < menusDeroulants.length; i++) {
+                const menuOuvert = menusDeroulants[i];
+                if (menuOuvert.style.display === 'block') {
+                    menuOuvert.style.display = 'none';
+                }
+            }
+        }
+    }
 </script>
 
 </body>

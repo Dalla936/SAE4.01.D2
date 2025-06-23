@@ -1,12 +1,10 @@
 <?php
 $dbhost = 'localhost'; //url de l'host
-$dbname= 'site_jeux'; //name of the database
+$dbname= 'database_jeu'; //name of the database
 $dbuser = "postgres"; // username
-$dbpass= "postgres"; //
+$dbpass= "dalla"; //
 
 
 $connection = new PDO('pgsql:host='.$dbhost.";dbname=".$dbname, $dbuser, $dbpass); // pr se connecter à la bd 
 
-$requete = $connection->prepare('SELECT count(*) FROM jeux;');
-$requete->execute();
 ?>
