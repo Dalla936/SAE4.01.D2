@@ -27,7 +27,7 @@ if ($ajout === "add") {
     $age = $_GET['Age'] ?? null;
 
     $gameModel->addGames($titre, $dateParutionDebut, $dateParutionFin, $Nbjoueurs, $age);
-    header("Location: ../Vue/accueil.html");
+    header("Location: ../Vue/accueil.php");
     exit();
 }
 

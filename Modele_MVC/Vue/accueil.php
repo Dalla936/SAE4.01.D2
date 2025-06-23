@@ -32,11 +32,16 @@ $roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
       </form>
     </div>
     <div class="profil-utilisateur" id="profilUtilisateur">
+    <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
+
       <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
       <div class="menu-deroulant" id="menuDeroulant">
         <a href="../Vue/compte.php">Gestion du profil</a>
         <?php if ($roleId == 2 || $roleId == 3): ?>
             <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
+        <?php endif; ?>
+        <?php if (!isset($_COOKIE['role_id'])): ?>
+            <a href="../Vue/connexion.html"> Se connecter</a>
         <?php endif; ?>
         <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
       </div>

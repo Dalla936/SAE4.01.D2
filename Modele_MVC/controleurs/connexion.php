@@ -50,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['token'] = $token;
         echo "<script>console.log('Token de sécurité généré : $token');</script>";
         
-        setcookie('numero_etu', $user['numero_etu'], time() + 7246060, "/");
-        setcookie('username', $user['nom'], time() + 7246060, "/");
-        setcookie('role_id', $user['role_id'], time() + 72460*60, "/");
+        setcookie('numero_etu', $user['numero_etu'], time() + 3600, "/"); // Durée réduite à 1 heure pour améliorer la sécurité
+        setcookie('username', $user['nom'], time() + 3600, "/");
+        setcookie('role_id', $user['role_id'], time() + 3600, "/");
 
-        header("Location: ../Vue/accueil.html");
+        header("Location: ../Vue/accueil.php");
         exit;
     } else {
         header("Location: ../Vue/mdp_refus.html");

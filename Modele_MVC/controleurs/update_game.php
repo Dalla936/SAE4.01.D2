@@ -6,7 +6,7 @@ session_start();
 
 $gamemodel = new GameModel();
 if (!isset($_SESSION['role_id']) || $_SESSION['role_id'] != 2) {
-    header("Location: ../Vue/accueil.html");
+    header("Location: ../Vue/accueil.php");
     exit;
 }
 if (!isset($_POST['game_name']) || empty(trim($_POST['game_name']))) {

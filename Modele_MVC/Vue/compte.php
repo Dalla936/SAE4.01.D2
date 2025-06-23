@@ -9,7 +9,7 @@
 <body>
     <div class="flou"></div>
     <header>
-        <a href="../Vue/accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
+        <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
         <nav>
             <a href="../Vue/documentation.html">Documentation</a>
             <a href="../controleurs/info.php ">Collection</a>
@@ -24,12 +24,12 @@
                 <button type="submit">🔍</button>
         </div>
         <div class="profil-utilisateur" id="profilUtilisateur">
-        <span class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></span>
+        <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
 
             <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
 
             <div class="menu-deroulant" id="menuDeroulant">
-                <a href="gestion_profil.html">Gestion du profil</a>
+                <a href="compte.php">Gestion du profil</a>
                 <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
             <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
         <?php endif; ?>
