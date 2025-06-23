@@ -56,7 +56,7 @@ if (isset($_POST['update_game'])) {
 </head>
 <body>
 <header>
-    <a href="../Vue/accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord" /></a>
+    <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord" /></a>
     <nav>
       <a href="../Vue/documentation.html">Documentation</a>
       <a href="../controleurs/info.php">Collection</a>
@@ -71,6 +71,7 @@ if (isset($_POST['update_game'])) {
       </form>
     </div>
     <div class="profil-utilisateur" id="profilUtilisateur">
+    <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
       <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
       <div class="menu-deroulant" id="menuDeroulant">
         <a href="../Vue/compte.php">Gestion du profil</a>

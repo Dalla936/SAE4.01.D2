@@ -37,12 +37,15 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
         </form>
     </div>
     <div class="profil-utilisateur" id="profilUtilisateur">
+    <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
+
       <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
       <div class="menu-deroulant" id="menuDeroulant">
         <a href="../Vue/compte.php">Gestion du profil</a>
         <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
             <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
         <?php endif; ?>
+    
         <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
       </div>
     </div>
