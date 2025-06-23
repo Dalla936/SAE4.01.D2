@@ -27,9 +27,11 @@ $nbPages = $nbPages ?? 1;?>
                 <button type="submit">🔍</button>
             </form>
         </div>
-        <div class="profil-utilisateur" id="profilUtilisateur">
+    <div class="zone-utilisateur">
+
         <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
 
+        <div class="profil-utilisateur" id="profilUtilisateur">
             <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
             <div class="menu-deroulant" id="menuDeroulant">
                 <a href="../Vue/compte.php">Gestion du profil</a>
@@ -42,6 +44,8 @@ $nbPages = $nbPages ?? 1;?>
         <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
             </div>
         </div>
+    </div>
+
     </header>
     <!-- Boutons Filtre et Ajouter un jeu -->
     <div class="actions">

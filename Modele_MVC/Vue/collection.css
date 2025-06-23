@@ -80,6 +80,23 @@ header .search-bar button {
 }
 
 
+.zone-utilisateur {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre le texte et l'icône */
+  margin-right: 20px; /* facultatif : espace à droite si besoin */
+}
+
+.username {
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  padding: 0 15px;
+}
+
 /* Style pour l'image de l'icône utilisateur */
 .icone-utilisateur {
     cursor: pointer;
