@@ -55,7 +55,7 @@ Refonte du projet S3.01 avec une meilleure organisation du code, plus de fonctio
       ```sql
 
     psql -U postgres;
-       ```
+      ```
 
 
     Puis ensuite créer la base de données via l'utilisateur postgres : 
