@@ -567,6 +567,159 @@ public static function countGamesByName($connection, $query) {
     $requete->execute();
     return $requete->fetchColumn();
 }
+
+/**
+ * Vérifie si l'utilisateur actuel est administrateur
+ */
+private function isAdmin() {
+    // Vérifier d'abord les sessions, puis les cookies en fallback
+    if (isset($_SESSION['role_id'])) {
+        return $_SESSION['role_id'] == 2;
+    }
+    return isset($_COOKIE['role_id']) && $_COOKIE['role_id'] == 2;
+}
+
+/**
+ * Exporte la base de données PostgreSQL (admin seulement)
+ */
+public function exportDatabase() {
+    if (!$this->isAdmin()) {
+        throw new Exception("Accès refusé - droits administrateur requis");
+    }
+    
+    // Paramètres de connexion depuis nbpn.php
+    $dbHost = 'localhost';
+    $dbName = 'site_jeux';
+    $dbUser = 'postgres';
+    $dbPassword = 'postgres';
+    
+    $filename = 'backup_site_jeux_' . date('Y-m-d_H-i-s') . '.sql';
+    
+    // Créer un fichier temporaire
+    $tempFile = tempnam(sys_get_temp_dir(), 'pg_dump_');
+    
+    // Commande pg_dump adaptée à Windows
+    $command = "pg_dump -h $dbHost -U $dbUser -d $dbName > \"$tempFile\" 2>&1";
+    
+    // Définir le mot de passe via variable d'environnement
+    putenv("PGPASSWORD=$dbPassword");
+    
+    exec($command, $output, $return_code);
+    
+    if ($return_code === 0 && file_exists($tempFile) && filesize($tempFile) > 0) {
+        // Forcer le téléchargement
+        header('Content-Type: application/sql');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . filesize($tempFile));
+        readfile($tempFile);
+        unlink($tempFile); // Supprimer le fichier temporaire
+        exit;
+    } else {
+        // Nettoyer le fichier temporaire en cas d'erreur
+        if (file_exists($tempFile)) {
+            unlink($tempFile);
+        }
+        throw new Exception("Erreur lors de l'export de la base de données. Code retour: $return_code. Output: " . implode("\n", $output));
+    }
+}
+
+/**
+ * Exporte les données via requêtes SQL (alternative si pg_dump n'est pas disponible)
+ */
+public function exportDatabaseSQL() {
+    if (!$this->isAdmin()) {
+        throw new Exception("Accès refusé - droits administrateur requis");
+    }
+    
+    $tables = ['utilisateurs', 'jeux', 'auteur', 'editeur', 'mecanisme', 'boites', 'emprunteur', 'pret', 'jeuauteur', 'jeuediteur'];
+    $sql_content = "-- Export de la base de données site_jeux (PostgreSQL)\n";
+    $sql_content .= "-- Date: " . date('Y-m-d H:i:s') . "\n\n";
+    $sql_content .= "-- Désactiver les contraintes temporairement\n";
+    $sql_content .= "SET session_replication_role = replica;\n\n";
+    
+    try {
+        foreach ($tables as $table) {
+            $sql_content .= "-- Table: \"$table\"\n";
+            
+            // Récupérer les métadonnées des colonnes pour les types
+            $metaStmt = $this->connection->query("
+                SELECT column_name, data_type, udt_name 
+                FROM information_schema.columns 
+                WHERE table_name = '$table' AND table_schema = 'public'
+                ORDER BY ordinal_position
+            ");
+            $columnsMeta = $metaStmt->fetchAll(PDO::FETCH_ASSOC);
+            $columnsTypes = [];
+            foreach ($columnsMeta as $meta) {
+                $columnsTypes[$meta['column_name']] = $meta['data_type'];
+            }
+            
+            $stmt = $this->connection->query("SELECT * FROM \"$table\"");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (!empty($rows)) {
+                // Supprimer les données existantes
+                $sql_content .= "DELETE FROM \"$table\";\n";
+                
+                foreach ($rows as $row) {
+                    $columns = array_map(function($col) { return "\"$col\""; }, array_keys($row));
+                    $columns_str = implode(', ', $columns);
+                    
+                    $values = [];
+                    foreach ($row as $columnName => $value) {
+                        if ($value === null) {
+                            $values[] = 'NULL';
+                        } elseif (is_bool($value)) {
+                            $values[] = $value ? 'TRUE' : 'FALSE';
+                        } elseif (isset($columnsTypes[$columnName])) {
+                            $type = $columnsTypes[$columnName];
+                            // Types numériques PostgreSQL
+                            if (in_array($type, ['integer', 'bigint', 'smallint', 'numeric', 'decimal', 'real', 'double precision'])) {
+                                $values[] = is_numeric($value) ? $value : 'NULL';
+                            } else {
+                                // Type texte
+                                $values[] = "'" . str_replace("'", "''", $value) . "'";
+                            }
+                        } else {
+                            // Par défaut, traiter comme string
+                            $values[] = "'" . str_replace("'", "''", $value) . "'";
+                        }
+                    }
+                    $values_str = implode(', ', $values);
+                    
+                    $sql_content .= "INSERT INTO \"$table\" ($columns_str) VALUES ($values_str);\n";
+                }
+            }
+            $sql_content .= "\n";
+        }
+        
+        // Réactiver les contraintes et remettre à jour les séquences
+        $sql_content .= "-- Réactiver les contraintes\n";
+        $sql_content .= "SET session_replication_role = DEFAULT;\n\n";
+        
+        // Remettre à jour les séquences PostgreSQL
+        $sql_content .= "-- Mise à jour des séquences\n";
+        $sequences_query = "SELECT schemaname, sequencename, last_value FROM pg_sequences WHERE schemaname = 'public'";
+        $sequences_stmt = $this->connection->query($sequences_query);
+        $sequences = $sequences_stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        foreach ($sequences as $seq) {
+            $sql_content .= "SELECT setval('\"" . $seq['sequencename'] . "\"', " . ($seq['last_value'] ?: 1) . ", true);\n";
+        }
+        
+        $filename = 'backup_site_jeux_' . date('Y-m-d_H-i-s') . '.sql';
+        
+        // Envoyer le fichier en téléchargement
+        header('Content-Type: application/sql');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($sql_content));
+        echo $sql_content;
+        exit;
+        
+    } catch (Exception $e) {
+        throw new Exception("Erreur lors de l'export SQL: " . $e->getMessage());
+    }
+}
 }
 
 ?>

@@ -8,6 +8,11 @@ if(!isset($_SESSION['role_id']) ||($_SESSION['role_id'] != 2 && $_SESSION['role_
     header("Location: ../Vue/accueil.html");
     exit;
 }
+
+// Messages de succès/erreur pour export
+$successMessage = isset($_GET['success']) ? $_GET['success'] : '';
+$errorMessage = isset($_GET['error']) ? $_GET['error'] : '';
+
 // Fetch all users and games
 $users = $gamemodel->getAllUsers();
 $games = $gamemodel->getAllGames();
@@ -81,7 +86,96 @@ if (isset($_POST['update_game'])) {
       </div>
     </div>
   </header>
-  <?php if (isset($_COOKIE['role_id']) && $_COOKIE['role_id'] == 2): ?>
+
+  <!-- Messages de succès/erreur -->
+  <?php if (!empty($successMessage)): ?>
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 15px; margin: 20px; border: 1px solid #c3e6cb; border-radius: 5px;">
+        ✅ <?= htmlspecialchars($successMessage) ?>
+    </div>
+  <?php endif; ?>
+  
+  <?php if (!empty($errorMessage)): ?>
+    <div class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin: 20px; border: 1px solid #f5c6cb; border-radius: 5px;">
+        ❌ <?= htmlspecialchars($errorMessage) ?>
+    </div>
+  <?php endif; ?>
+
+  <!-- Section Administrateur (role_id = 2) -->
+  <?php 
+  $isAdmin = false;
+  
+  if (isset($_SESSION['role_id']) && $_SESSION['role_id'] == 2) {
+      $isAdmin = true;
+  } elseif (isset($_COOKIE['role_id']) && $_COOKIE['role_id'] == 2) {
+      $isAdmin = true;
+  }
+  ?>
+  
+  <?php if ($isAdmin): ?>
+    <div class="admin-section" style="background-color: #f8f9fa; padding: 20px; margin: 20px; border-radius: 10px; border: 2px solid #007bff;">
+        <h2 style="color: #007bff; margin-bottom: 20px;">🔧 Administration de la base de données</h2>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <!-- Export de la base -->
+            <div class="export-section" style="flex: 1; min-width: 400px; background: white; padding: 20px; border-radius: 5px; border: 1px solid #dee2e6;">
+                <h3 style="color: #28a745; margin-bottom: 15px;">📥 Exporter la base de données</h3>
+                <p style="color: #6c757d; margin-bottom: 15px;">Téléchargez une sauvegarde complète de la base de données PostgreSQL.</p>
+                
+                <form action="../controleurs/database_manager.php" method="post" style="margin-bottom: 10px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: bold;">
+                            <input type="radio" name="export_type" value="pg_dump" checked style="margin-right: 8px;">
+                            🔧 Export via pg_dump (recommandé)
+                        </label>
+                        <small style="display: block; margin-left: 25px; color: #6c757d; margin-bottom: 10px;">
+                            Utilise l'outil officiel PostgreSQL pour un export complet et optimisé
+                        </small>
+                        
+                        <label style="display: block;">
+                            <input type="radio" name="export_type" value="sql" style="margin-right: 8px;">
+                            � Export via requêtes SQL (alternatif)
+                        </label>
+                        <small style="display: block; margin-left: 25px; color: #6c757d;">
+                            Export personnalisé via requêtes SQL si pg_dump n'est pas disponible
+                        </small>
+                    </div>
+                    <button type="submit" name="export_db" class="btn-export" style="background-color: #28a745; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%;">
+                        📥 Télécharger la sauvegarde
+                    </button>
+                </form>
+                <div style="background-color: #f8f9fa; padding: 10px; border-radius: 3px; margin-top: 15px;">
+                    <small style="color: #495057;">
+                        <strong>Format:</strong> Fichier .sql compatible PostgreSQL<br>
+                        <strong>Contenu:</strong> Structure + données + séquences
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 20px; background-color: #e3f2fd; border: 1px solid #bbdefb; border-radius: 5px;">
+            <strong>ℹ️ Informations sur l'export :</strong>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Export complet :</strong> Toutes les tables, données, contraintes et séquences</li>
+                <li><strong>Compatibilité :</strong> Fichier SQL strictement compatible PostgreSQL</li>
+                <li><strong>Sécurité :</strong> Accessible uniquement aux administrateurs</li>
+                <li><strong>Format :</strong> backup_site_jeux_YYYY-MM-DD_HH-MM-SS.sql</li>
+                <li><strong>Fallback automatique :</strong> Si pg_dump échoue, utilisation de l'export SQL alternatif</li>
+            </ul>
+        </div>
+    </div>
+  <?php endif; ?>
+
+  <!-- Section Gestionnaire/Admin (role_id = 2 ou 3) -->
+  <?php 
+  $canManageUsers = false;
+  if (isset($_SESSION['role_id']) && ($_SESSION['role_id'] == 2 || $_SESSION['role_id'] == 3)) {
+      $canManageUsers = true;
+  } elseif (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)) {
+      $canManageUsers = true;
+  }
+  
+  if ($canManageUsers): 
+  ?>
     <h1>Gestion des utilisateurs</h1>
     <table border="1">
         <tr>
