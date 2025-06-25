@@ -61,7 +61,7 @@ Refonte du projet S3.01 avec une meilleure organisation du code, plus de fonctio
     Puis ensuite créer la base de données via l'utilisateur postgres : 
        ```sql
 
-    CREATE DATABASE database_jeu;
+       CREATE DATABASE database_jeu;
        ```
    - **Nom de la base** : `database_jeu`
    - **Utilisateur** : `postgres`
@@ -78,7 +78,7 @@ Refonte du projet S3.01 avec une meilleure organisation du code, plus de fonctio
    
    c. Exécuter le script d'importation :
    ```sql
-\i ../scripts/scriptD2S4.sql;
+      \i ../scripts/scriptD2S4.sql;
    ```
 
 4. **Démarrer votre serveur local**
