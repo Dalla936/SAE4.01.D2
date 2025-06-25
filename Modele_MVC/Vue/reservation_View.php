@@ -22,13 +22,12 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
 
 <!-- Header (avec le menu déroulant) -->
 <header>
-    <a href="accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
-    <nav>
-        <a href="documentation.html">Documentation</a>
-        <a href="../controleurs/info.php">Collection</a>
-        <a href="reservation_View.php">Réservation</a>
-        <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
-    </nav>
+    <a href="accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>        <nav>
+            <a href="../Vue/documentation.php">Documentation</a>
+            <a href="../controleurs/info.php">Collection</a>
+            <a href="reservation_View.php">Réservation</a>
+            <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
+        </nav>
     <div class="search-bar">
         <form action="../controleurs/index.php" method="get">
             <input type="hidden" name="action" value="searchGame">
@@ -44,12 +43,18 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
     <div class="profil-utilisateur" id="profilUtilisateur">
       <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
       <div class="menu-deroulant" id="menuDeroulant">
-        <a href="../Vue/compte.php">Gestion du profil</a>
+        <?php if (isset($_COOKIE['username'])): ?>
+            <a href="../Vue/compte.php">Gestion du profil</a>
+        <?php endif; ?>
         <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
             <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
         <?php endif; ?>
-    
-        <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
+        <?php if (!isset($_COOKIE['role_id'])): ?>
+            <a href="../Vue/connexion.html"> Se connecter</a>
+        <?php endif; ?>
+        <?php if (isset($_COOKIE['username'])): ?>
+            <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
+        <?php endif; ?>
       </div>
     </div>
     </div>
