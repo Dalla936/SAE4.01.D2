@@ -8,12 +8,12 @@ body {
 }
 
 /* Header */
+/* Header */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2F4267;
-    padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+    background-color: #293358;
 }
 
 header a {
@@ -73,13 +73,6 @@ header .search-bar button {
 }
 
 
-/* Style pour la section du profil utilisateur */
-.profil-utilisateur {
-    position: relative;
-    display: inline-block;
-}
-
-
 .zone-utilisateur {
   display: flex;
   align-items: center;
@@ -96,6 +89,16 @@ header .search-bar button {
   height: 60px;
   padding: 0 15px;
 }
+
+
+/* Style pour la section du profil utilisateur */
+.profil-utilisateur {
+    position: relative;
+    display: inline-block;
+}
+
+
+
 
 /* Style pour l'image de l'icône utilisateur */
 .icone-utilisateur {
@@ -148,6 +151,7 @@ header .search-bar button {
 .bouton-deconnexion:hover {
     background-color: #d93636; /* Couleur plus sombre au survol */
 }
+
 
 
 /* Contenu principal */

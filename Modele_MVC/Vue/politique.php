@@ -1,9 +1,16 @@
+<?php
+// Vérifier si l'utilisateur est connecté
+$isLoggedIn = isset($_COOKIE['username']);
+$username = $isLoggedIn ? $_COOKIE['username'] : '';
+$roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Politique de Cookies - Sorbonne Paris Nord</title>
+    <link rel="stylesheet" href="../Vue/accueil_styles.css">
     <link rel="stylesheet" href="politique_styles.css">
 </head>
 <body>
@@ -31,7 +38,7 @@
                     <?php if (isset($_COOKIE['username'])): ?>
                         <a href="../Vue/compte.php">Gestion du profil</a>
                     <?php endif; ?>
-                    <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
+                    <?php if ($roleId == 2 || $roleId == 3): ?>
                         <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
                     <?php endif; ?>
                     <?php if (!isset($_COOKIE['role_id'])): ?>
