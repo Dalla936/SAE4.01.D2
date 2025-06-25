@@ -1,18 +1,34 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
+
+:root {
+  --primary: #14213d;      /* Bleu foncé */
+  --secondary: #1f2a48;    /* Variante bleu foncé */
+  --accent: #FF972F;       /* Orange vif */
+  --bg: #14213d;           /* Fond général */
+  --card-bg: #1a2540;      /* Fond carte plus clair */
+  --white: #fff;
+  --gray: #e5e9f2;
+  --text: #fff;
+  --footer: #1f2a48;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* HEADER */
 /* Header */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
     background-color: #293358;
-    padding: 10px 20px;
 }
 
 header a {
@@ -72,18 +88,32 @@ header .search-bar button {
 }
 
 
+.zone-utilisateur {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre le texte et l'icône */
+  margin-right: 20px; /* facultatif : espace à droite si besoin */
+}
+
+.username {
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  padding: 0 15px;
+}
+
+
 /* Style pour la section du profil utilisateur */
 .profil-utilisateur {
     position: relative;
     display: inline-block;
 }
 
-/* Style pour l'icône utilisateur */
-/* Style pour la section du profil utilisateur */
-.profil-utilisateur {
-    position: relative;
-    display: inline-block;
-}
+
+
 
 /* Style pour l'image de l'icône utilisateur */
 .icone-utilisateur {
@@ -137,108 +167,175 @@ header .search-bar button {
     background-color: #d93636; /* Couleur plus sombre au survol */
 }
 
-/* Main Content Styles */
+/* MAIN */
 main {
-    text-align: center;
-    padding: 100px 30px;
+  flex: 1 0 auto;
+  padding: 48px 16px 80px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-
-
-.documentation{
-    display: block;
-    background-color: #bbbbbb;
-    border-radius: 1%;
-    box-shadow:10px 5px 5px  rgba(0, 0, 0, 0.5);
-    padding-bottom: auto;
-    padding-top: 2px;
-
+.documentation {
+  background: var(--card-bg);
+  border-radius: 28px;
+  box-shadow: 0 8px 40px 0 rgba(20,33,61,0.18);
+  padding: 40px 32px 48px 32px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 48px auto 0 auto;
+  /* Ajoute une transition douce si besoin */
+  transition: box-shadow 0.3s, background 0.3s;
 }
-
 
 .documentation h1 {
-    font-size: 36px;
-    color: #333;
-    margin-bottom: 20px;
-
+  font-size: 2.6rem;
+  color: var(--white);
+  margin-bottom: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .documentation p {
-    text-align: justify;
-    padding-left: 150px;
-    padding-right: 150px;
+  text-align: justify;
+  margin-bottom: 18px;
+  font-size: 1.08rem;
+  color: var(--white);
+  line-height: 1.7;
 }
 
-.documentation .rule-card {
-    background-color: #1A2945;
-    color: white;
-    margin: 30px ;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 200px;
-    box-shadow:10px 5px 5px rgba(0, 0, 0, 0.5);
-    font-size: 18px;
-    text-align: center;
-    display: inline-block;
+.documentation h2 {
+  color: var(--accent);
+  font-size: 1.4rem;
+  margin: 32px 0 18px 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.documentation .rule-card img{
-    width: 200px;
-    height: 150px;
-    max-width: 200px;
-    max-height:200px ;
+/* RULES GRID */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+  justify-items: center;
+  margin-top: 18px;
 }
 
-.documentation .rule-card:hover {
-    background-color: #0f1624;
-    transform: scale(1.02);
-    transition: all 0.3s ease-in-out;
+.rule-card {
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(20,33,61,0.15);
+  padding: 24px 12px 18px 12px;
+  max-width: 260px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s, color 0.25s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid #22305a; /* Ajoute une bordure subtile */
 }
 
-/* Search Bar Styles */
-.search-bar {
-    margin-top: 30px;
+.rule-card img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: var(--white);
+  transition: transform 0.25s;
 }
 
-.search-bar input {
-    padding: 10px;
-    width: 80%;
-    max-width: 500px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
+.rule-card span {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 4px;
+  letter-spacing: 0.2px;
 }
 
-.search-bar button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+.rule-card:hover {
+  background: var(--accent);
+  color: var(--primary);
+  transform: translateY(-8px) scale(1.035);
+  box-shadow: 0 8px 32px rgba(255,151,47,0.18);
+  border-color: var(--accent);
 }
 
-.search-bar button:hover {
-    background-color: #555;
+.rule-card:hover img {
+  transform: scale(1.07) rotate(-2deg);
 }
 
-/* Footer Styles */
-footer {
-    text-align: center;
-    padding: 10px 0;
-    background-color: #293358;
-    color: #333;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+/* FOOTER */
+footer.footer {
+  background: var(--primary);
+  color: var(--white);
+  text-align: center;
+  padding: 18px 0 12px 0;
+  font-size: 1rem;
+  border-radius: 24px 24px 0 0;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 100;
+  box-shadow: 0 -2px 12px rgba(20,33,61,0.08);
 }
 
 .footer a {
-    color: white;
-    text-decoration: none;
+  color: var(--accent);
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.2s;
+}
+
+.footer a:hover {
+  color: var(--white);
+  text-decoration: underline;
 }
 
 footer p {
-    margin: 5px 0;
+  margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 10px;
+    gap: 10px;
+  }
+  nav, .search-bar, .profil-utilisateur {
+    margin: 10px 0 0 0;
+  }
+  .documentation {
+    padding: 18px 6px 32px 6px;
+  }
+}
+
+@media (max-width: 650px) {
+  .documentation {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 10px 2px 80px 2px;
+  }
+  .rules-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  header {
+    border-radius: 0 0 18px 18px;
+    padding: 10px 4px;
+  }
+  footer.footer {
+    border-radius: 18px 18px 0 0;
+    font-size: 0.95rem;
+    padding: 12px 0 8px 0;
+  }
 }

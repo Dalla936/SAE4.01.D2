@@ -1,88 +1,69 @@
 <?php
+require '../modele/GameModel.php'; // Inclure le modèle
+session_start();
+if(!isset($_SESSION['role_id']) ||($_SESSION['role_id'] != 2 && $_SESSION['role_id'] != 3 && $_SESSION['role_id'] != 1)) {
+    header("Location: ../Vue/connexion.html");
+    exit;
+}
 // Récupérer le nom du jeu depuis l'URL
 $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
+
+// Vérifier si l'utilisateur est connecté
+$isLoggedIn = isset($_COOKIE['username']);
+$username = $isLoggedIn ? $_COOKIE['username'] : '';
+$roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="reservation_styles.css">
+    <link rel="stylesheet" href="../Vue/reservation_styles.css">
+    <link rel="stylesheet" href="../Vue/accueil_styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <title>Réservation - Sorbonne Paris Nord</title>
-    <style>
-        /* Styles pour le menu déroulant */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #fff;
-            min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a, .dropdown-content button {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            background: none;
-            border: none;
-            text-align: left;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .dropdown-content a:hover,
-        .dropdown-content button:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #ddd;
-        }
-    </style>
+    
 </head>
 <body>
 
 <!-- Header (avec le menu déroulant) -->
 <header>
-    <a href="accueil.html"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
+    <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord" /></a>
     <nav>
-        <a href="documentation.html">Documentation</a>
-        <a href="../controleurs/info.php">Collection</a>
-        <a href="reservation_View.php">Réservation</a>
-        <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
+      <a href="../Vue/documentation.html">Documentation</a>
+      <a href="../controleurs/info.php">Collection</a>
+      <a href="../Vue/reservation_View.php">Réservation</a>
+      <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
     </nav>
     <div class="search-bar">
-        <form action="../controleurs/index.php" method="get">
-            <input type="hidden" name="action" value="searchGame">
-            <input type="text" name="query" placeholder="Rechercher un jeu...">
-            <button type="submit">🔍</button>
-        </form>
+      <form action="../controleurs/info.php" method="get">
+        <input type="hidden" name="action" value="searchGame" />
+        <input type="text" name="query" placeholder="Rechercher un jeu..." required />
+        <button type="submit">🔍</button>
+      </form>
     </div>
-    <div class="dropdown">
-        <img src="../img/profile.png" alt="Icône Profil">
-        <div class="dropdown-content">
-            <a href="compte.php">Gestion du compte</a>
-            <button class="bouton-deconnexion">Déconnexion</button>
+    <div class="zone-utilisateur">
+    <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
+    <div class="profil-utilisateur" id="profilUtilisateur">
+      <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
+      <div class="menu-deroulant" id="menuDeroulant">
+        <?php if (isset($_COOKIE['username'])): ?>
+        <a href="../Vue/compte.php">Gestion du profil</a>
+        <?php endif; ?>
+        <?php if ($roleId == 2 || $roleId == 3): ?>
+            <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
+        <?php endif; ?>
+        <?php if (!isset($_COOKIE['role_id'])): ?>
+            <a href="../Vue/connexion.html"> Se connecter</a>
+        <?php endif; ?>
+    <?php if (isset($_COOKIE['username'])): ?>
+        <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
+        <?php endif; ?>
         </div>
     </div>
-</header>
+    </div>
+
+  </header>
 
 <!-- Main content -->
 <main>
@@ -91,7 +72,7 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
         <form action="../controleurs/index.php" method="post">
             <!-- Numéro étudiant -->
             <label for="nom">Nom</label>
-            <input type="text" id="nom" name="nom" placeholder="Nom" required>
+            <input type="text" id="nom" name="nom" placeholder="Nom" value="<?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : ''; ?>"  readonly required>
 
             <label for="email">Email</label>
             <input type="text" id="email" name="email" placeholder="Email" required>
@@ -149,6 +130,28 @@ $gameName = isset($_GET['game']) ? htmlspecialchars($_GET['game']) : '';
             }
         }
     });
+
+        // Fonction pour basculer l'affichage du menu déroulant
+        function basculerMenuDeroulant() {
+        const menuDeroulant = document.getElementById('menuDeroulant');
+        // Si le menu est affiché, le cacher, sinon l'afficher
+        menuDeroulant.style.display = menuDeroulant.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Fermer le menu déroulant si l'utilisateur clique en dehors
+    window.onclick = function(event) {
+        // Vérifie si l'élément cliqué n'est pas l'icône de l'utilisateur
+        if (!event.target.matches('.icone-utilisateur')) {
+            const menusDeroulants = document.getElementsByClassName('menu-deroulant');
+            // Parcourt tous les menus déroulants pour les cacher
+            for (let i = 0; i < menusDeroulants.length; i++) {
+                const menuOuvert = menusDeroulants[i];
+                if (menuOuvert.style.display === 'block') {
+                    menuOuvert.style.display = 'none';
+                }
+            }
+        }
+    }
 </script>
 
 </body>

@@ -3,17 +3,17 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #1A2945;
     color: #333;
 }
 
 /* Header */
+/* Header */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
     background-color: #293358;
-    padding: 10px 20px;
 }
 
 header a {
@@ -73,11 +73,31 @@ header .search-bar button {
 }
 
 
+.zone-utilisateur {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espace entre le texte et l'icône */
+  margin-right: 20px; /* facultatif : espace à droite si besoin */
+}
+
+.username {
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  padding: 0 15px;
+}
+
+
 /* Style pour la section du profil utilisateur */
 .profil-utilisateur {
     position: relative;
     display: inline-block;
 }
+
+
 
 
 /* Style pour l'image de l'icône utilisateur */
@@ -133,16 +153,20 @@ header .search-bar button {
 }
 
 
+
 /* Contenu principal */
 .container {
+    padding: 20px;
     text-align: center;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .container h1 {
     font-size: 36px;
-    color: #333;
+    color: white;
     margin-bottom: 20px;
+    text-align: center;
+    padding: 30px ;
 }
 
 /* Barre de recherche centrale */
@@ -194,7 +218,7 @@ header .search-bar button {
 
 
 .actions button {
-    background-color: #293358;
+    background-color: #FF972F;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -205,7 +229,7 @@ header .search-bar button {
 
 
 .actions button:hover {
-    background-color: #1f2949;
+    background-color: #e67e1d;
 }
 
 /* Popups */
@@ -242,9 +266,8 @@ header .search-bar button {
 }
 
 
-
 .popup-content button {
-    background-color: #293358;
+    background-color: #FF972F;
     color: white;
     border: none;
     padding: 10px;
@@ -252,18 +275,71 @@ header .search-bar button {
     border-radius: 5px;
 }
 
-
-
 .popup-content button:hover {
-    background-color: #1f2949;
+    background-color: #e67e1d;
 }
 
+
+.game-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #2F4267;
+    position: relative;
+}
+
+.reservation-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #FF972F;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.game-card h3 {
+    margin-top: 0;
+    color: white;
+    text-align: center;
+}
+
+.game-card strong{
+    color: #FF972F;
+    text-align: center;
+
+}
+
+.game-card p {
+    color: white;
+    text-align: center;
+}
+
+.game-card button {
+    background-color: #FF972F;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    
+    
+    
+}
+
+.game-card button:hover {
+    background-color: #e67e1d;
+}
 
 /* Footer */
 .footer {
     text-align: center;
     padding: 10px 0;
-    background-color: #293358;
+    background-color: #2F4267;
     color: #333;
     position: fixed;
     bottom: 0;
@@ -277,4 +353,54 @@ header .search-bar button {
 
 footer p {
     margin: 5px 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.pagination a {
+    background-color: #FF972F;
+    color: white;
+    padding: 8px 12px;
+    margin: 0 3px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+  background-color: #e67e1d;
+}
+
+.pagination span {
+    background-color: #FF972F;
+    color: white;
+    cursor: default;
+    padding: 8px 12px;
+    margin: 0 3px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.pagination a, 
+.pagination span {
+  background-color: #FF972F;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  user-select: none;
+  min-width: 36px;
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
