@@ -1,3 +1,9 @@
+<?php
+// Vérifier si l'utilisateur est connecté
+$isLoggedIn = isset($_COOKIE['username']);
+$username = $isLoggedIn ? $_COOKIE['username'] : '';
+$roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,10 +11,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentions légales - Sorbonne Paris Nord</title>
     <link rel="stylesheet" href="mentions_styles.css">
+    <link rel="stylesheet" href="../Vue/accueil_styles.css">
 </head>
 <body>
     <header>
-        <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
+        <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord" /></a>
         <nav>
             <a href="../Vue/documentation.php">Documentation</a>
             <a href="../controleurs/info.php">Collection</a>
@@ -24,14 +31,13 @@
         </div>
         <div class="zone-utilisateur">
             <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
-            
             <div class="profil-utilisateur" id="profilUtilisateur">
                 <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
                 <div class="menu-deroulant" id="menuDeroulant">
                     <?php if (isset($_COOKIE['username'])): ?>
                         <a href="../Vue/compte.php">Gestion du profil</a>
                     <?php endif; ?>
-                    <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
+                    <?php if ($roleId == 2 || $roleId == 3): ?>
                         <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
                     <?php endif; ?>
                     <?php if (!isset($_COOKIE['role_id'])): ?>

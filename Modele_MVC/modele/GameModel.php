@@ -572,6 +572,11 @@ public static function countGamesByName($connection, $query) {
  * Vérifie si l'utilisateur actuel est administrateur
  */
 private function isAdmin() {
+    // Démarrer la session si ce n'est pas déjà fait
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    
     // Vérifier d'abord les sessions, puis les cookies en fallback
     if (isset($_SESSION['role_id'])) {
         return $_SESSION['role_id'] == 2;
@@ -587,19 +592,52 @@ public function exportDatabase() {
         throw new Exception("Accès refusé - droits administrateur requis");
     }
     
-    // Paramètres de connexion depuis nbpn.php
+    // Lire les paramètres depuis nbpn.php
+    require_once '../modele/nbpn.php';
+    
+    // Extraire les paramètres de connexion de la chaîne DSN
+    $dsn_parts = explode(';', $dsn);
     $dbHost = 'localhost';
-    $dbName = 'site_jeux';
+    $dbName = 'database_jeu';
     $dbUser = 'postgres';
-    $dbPassword = 'postgres';
+    $dbPassword = 'dalla';
+    
+    // Parser le DSN pour extraire les vraies valeurs
+    foreach ($dsn_parts as $part) {
+        if (strpos($part, 'host=') === 0) {
+            $dbHost = substr($part, 5);
+        } elseif (strpos($part, 'dbname=') === 0) {
+            $dbName = substr($part, 7);
+        }
+    }
     
     $filename = 'backup_site_jeux_' . date('Y-m-d_H-i-s') . '.sql';
     
     // Créer un fichier temporaire
     $tempFile = tempnam(sys_get_temp_dir(), 'pg_dump_');
     
-    // Commande pg_dump adaptée à Windows
-    $command = "pg_dump -h $dbHost -U $dbUser -d $dbName > \"$tempFile\" 2>&1";
+    // Vérifier si pg_dump est disponible
+    $pgDumpPath = 'pg_dump';
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        // Sur Windows, essayer différents chemins
+        $possiblePaths = [
+            'pg_dump',
+            'C:\Program Files\PostgreSQL\15\bin\pg_dump.exe',
+            'C:\Program Files\PostgreSQL\14\bin\pg_dump.exe',
+            'C:\Program Files\PostgreSQL\13\bin\pg_dump.exe'
+        ];
+        
+        foreach ($possiblePaths as $path) {
+            exec("\"$path\" --version 2>nul", $output, $return_code);
+            if ($return_code === 0) {
+                $pgDumpPath = $path;
+                break;
+            }
+        }
+    }
+    
+    // Commande pg_dump
+    $command = "\"$pgDumpPath\" -h $dbHost -U $dbUser -d $dbName -f \"$tempFile\" 2>&1";
     
     // Définir le mot de passe via variable d'environnement
     putenv("PGPASSWORD=$dbPassword");
@@ -619,7 +657,9 @@ public function exportDatabase() {
         if (file_exists($tempFile)) {
             unlink($tempFile);
         }
-        throw new Exception("Erreur lors de l'export de la base de données. Code retour: $return_code. Output: " . implode("\n", $output));
+        
+        // Si pg_dump échoue, utiliser l'export SQL alternatif
+        return $this->exportDatabaseSQL();
     }
 }
 
@@ -631,30 +671,48 @@ public function exportDatabaseSQL() {
         throw new Exception("Accès refusé - droits administrateur requis");
     }
     
-    $tables = ['utilisateurs', 'jeux', 'auteur', 'editeur', 'mecanisme', 'boites', 'emprunteur', 'pret', 'jeuauteur', 'jeuediteur'];
-    $sql_content = "-- Export de la base de données site_jeux (PostgreSQL)\n";
-    $sql_content .= "-- Date: " . date('Y-m-d H:i:s') . "\n\n";
-    $sql_content .= "-- Désactiver les contraintes temporairement\n";
-    $sql_content .= "SET session_replication_role = replica;\n\n";
-    
     try {
+        // Récupérer la liste des tables dynamiquement
+        $tablesQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name";
+        $tablesStmt = $this->connection->query($tablesQuery);
+        $tables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        $sql_content = "-- Export de la base de données site_jeux (PostgreSQL)\n";
+        $sql_content .= "-- Date: " . date('Y-m-d H:i:s') . "\n\n";
+        $sql_content .= "-- Désactiver les contraintes temporairement\n";
+        $sql_content .= "SET session_replication_role = replica;\n\n";
+        
         foreach ($tables as $table) {
             $sql_content .= "-- Table: \"$table\"\n";
             
+            // Vérifier si la table existe et a des données
+            $checkStmt = $this->connection->prepare("SELECT COUNT(*) FROM \"$table\"");
+            $checkStmt->execute();
+            $rowCount = $checkStmt->fetchColumn();
+            
+            if ($rowCount == 0) {
+                $sql_content .= "-- Table \"$table\" est vide\n\n";
+                continue;
+            }
+            
             // Récupérer les métadonnées des colonnes pour les types
-            $metaStmt = $this->connection->query("
+            $metaStmt = $this->connection->prepare("
                 SELECT column_name, data_type, udt_name 
                 FROM information_schema.columns 
-                WHERE table_name = '$table' AND table_schema = 'public'
+                WHERE table_name = :table_name AND table_schema = 'public'
                 ORDER BY ordinal_position
             ");
+            $metaStmt->execute([':table_name' => $table]);
             $columnsMeta = $metaStmt->fetchAll(PDO::FETCH_ASSOC);
+            
             $columnsTypes = [];
             foreach ($columnsMeta as $meta) {
                 $columnsTypes[$meta['column_name']] = $meta['data_type'];
             }
             
-            $stmt = $this->connection->query("SELECT * FROM \"$table\"");
+            // Récupérer les données de la table
+            $stmt = $this->connection->prepare("SELECT * FROM \"$table\"");
+            $stmt->execute();
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             if (!empty($rows)) {
@@ -674,15 +732,19 @@ public function exportDatabaseSQL() {
                         } elseif (isset($columnsTypes[$columnName])) {
                             $type = $columnsTypes[$columnName];
                             // Types numériques PostgreSQL
-                            if (in_array($type, ['integer', 'bigint', 'smallint', 'numeric', 'decimal', 'real', 'double precision'])) {
+                            if (in_array($type, ['integer', 'bigint', 'smallint', 'numeric', 'decimal', 'real', 'double precision', 'serial', 'bigserial'])) {
                                 $values[] = is_numeric($value) ? $value : 'NULL';
+                            } elseif (in_array($type, ['boolean'])) {
+                                $values[] = $value ? 'TRUE' : 'FALSE';
                             } else {
-                                // Type texte
-                                $values[] = "'" . str_replace("'", "''", $value) . "'";
+                                // Type texte - échapper les apostrophes
+                                $escapedValue = str_replace("'", "''", $value);
+                                $values[] = "'" . $escapedValue . "'";
                             }
                         } else {
                             // Par défaut, traiter comme string
-                            $values[] = "'" . str_replace("'", "''", $value) . "'";
+                            $escapedValue = str_replace("'", "''", $value);
+                            $values[] = "'" . $escapedValue . "'";
                         }
                     }
                     $values_str = implode(', ', $values);
@@ -701,10 +763,14 @@ public function exportDatabaseSQL() {
         $sql_content .= "-- Mise à jour des séquences\n";
         $sequences_query = "SELECT schemaname, sequencename, last_value FROM pg_sequences WHERE schemaname = 'public'";
         $sequences_stmt = $this->connection->query($sequences_query);
-        $sequences = $sequences_stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        foreach ($sequences as $seq) {
-            $sql_content .= "SELECT setval('\"" . $seq['sequencename'] . "\"', " . ($seq['last_value'] ?: 1) . ", true);\n";
+        if ($sequences_stmt) {
+            $sequences = $sequences_stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($sequences as $seq) {
+                $lastValue = $seq['last_value'] ?: 1;
+                $sql_content .= "SELECT setval('\"" . $seq['sequencename'] . "\"', " . $lastValue . ", true);\n";
+            }
         }
         
         $filename = 'backup_site_jeux_' . date('Y-m-d_H-i-s') . '.sql';
@@ -720,6 +786,40 @@ public function exportDatabaseSQL() {
         throw new Exception("Erreur lors de l'export SQL: " . $e->getMessage());
     }
 }
+
+/**
+     * Méthode de debug pour tester l'export
+     */
+    public function debugExport() {
+        $debug = [];
+        
+        // Vérifier les droits d'administration
+        $debug['is_admin'] = $this->isAdmin();
+        $debug['session_role_id'] = $_SESSION['role_id'] ?? 'non défini';
+        $debug['cookie_role_id'] = $_COOKIE['role_id'] ?? 'non défini';
+        
+        // Vérifier la connexion à la base
+        try {
+            $this->connection->query("SELECT 1");
+            $debug['db_connection'] = 'OK';
+        } catch (Exception $e) {
+            $debug['db_connection'] = 'Erreur: ' . $e->getMessage();
+        }
+        
+        // Vérifier si pg_dump est disponible
+        exec('pg_dump --version 2>&1', $output, $return_code);
+        $debug['pg_dump_available'] = ($return_code === 0) ? 'Oui' : 'Non';
+        $debug['pg_dump_output'] = implode("\n", $output);
+        
+        // Vérifier les permissions de fichier temporaire
+        $tempFile = tempnam(sys_get_temp_dir(), 'test_');
+        $debug['temp_file_writable'] = file_exists($tempFile) ? 'Oui' : 'Non';
+        if (file_exists($tempFile)) {
+            unlink($tempFile);
+        }
+        
+        return $debug;
+    }
 }
 
 ?>

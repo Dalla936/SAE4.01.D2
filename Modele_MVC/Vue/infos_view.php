@@ -1,6 +1,12 @@
 <?php
 $page = $page ?? 1;
-$nbPages = $nbPages ?? 1;?>
+$nbPages = $nbPages ?? 1;
+
+// Vérifier si l'utilisateur est connecté
+$isLoggedIn = isset($_COOKIE['username']);
+$username = $isLoggedIn ? $_COOKIE['username'] : '';
+$roleId = isset($_COOKIE['role_id']) ? $_COOKIE['role_id'] : 0;
+?>
 
 
 <!DOCTYPE html>
@@ -13,48 +19,48 @@ $nbPages = $nbPages ?? 1;?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"> <!-- css de la bibliothèque flatpick-->
 </head>
 
-<body>    <header>
-        <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
-        <nav>
-            <a href="../Vue/documentation.php">Documentation</a>
-            <a href="../controleurs/info.php">Collection</a>
-            <a href="../Vue/reservation_View.php">Réservation</a>
-            <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a></nav>
-        <div class="search-bar">
-            <form action="../controleurs/info.php" method="get">
-                <input type="hidden" name="action" value="searchGame">
-                <input type="text" name="query" placeholder="Rechercher un jeu..." required>
-                <button type="submit">🔍</button>
-            </form>
-        </div>
+<body>
+    <header>
+    <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord" /></a>
+    <nav>
+      <a href="../Vue/documentation.php">Documentation</a>
+      <a href="../controleurs/info.php">Collection</a>
+      <a href="../Vue/reservation_View.php">Réservation</a>
+      <a href="https://cas.univ-paris13.fr/cas/login?service=https%3A%2F%2Fent.univ-paris13.fr">ENT</a>
+    </nav>
+    <div class="search-bar">
+      <form action="../controleurs/info.php" method="get">
+        <input type="hidden" name="action" value="searchGame" />
+        <input type="text" name="query" placeholder="Rechercher un jeu..." required />
+        <button type="submit">🔍</button>
+      </form>
+    </div>
     <div class="zone-utilisateur">
-
-        <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
-
-        <div class="profil-utilisateur" id="profilUtilisateur">
-            <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
-            <div class="menu-deroulant" id="menuDeroulant">
-                <?php if (isset($_COOKIE['username'])): ?>
-                    <a href="../Vue/compte.php">Gestion du profil</a>
-                <?php endif; ?>
-                <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
-                    <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
-                <?php endif; ?>
-                <?php if (!isset($_COOKIE['role_id'])): ?>
-                    <a href="../Vue/connexion.html"> Se connecter</a>
-                <?php endif; ?>
-                <?php if (isset($_COOKIE['username'])): ?>
-                    <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
-                <?php endif; ?>
-            </div>
+    <a class="username" style="color: white;">Bonjour <?php echo isset($_COOKIE['username']) ? htmlspecialchars($_COOKIE['username']) : 'Utilisateur'; ?></a>
+    <div class="profil-utilisateur" id="profilUtilisateur">
+      <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()" />
+      <div class="menu-deroulant" id="menuDeroulant">
+        <?php if (isset($_COOKIE['username'])): ?>
+        <a href="../Vue/compte.php">Gestion du profil</a>
+        <?php endif; ?>
+        <?php if ($roleId == 2 || $roleId == 3): ?>
+            <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
+        <?php endif; ?>
+        <?php if (!isset($_COOKIE['role_id'])): ?>
+            <a href="../Vue/connexion.html"> Se connecter</a>
+        <?php endif; ?>
+    <?php if (isset($_COOKIE['username'])): ?>
+        <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
+        <?php endif; ?>
         </div>
     </div>
+    </div>
 
-    </header>
+  </header>
     <!-- Boutons Filtre et Ajouter un jeu -->
     <div class="actions">
         <button onclick="ouvrirFiltre()"> ⚙️ Filtrer</button>
-        <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
+        <?php if ($roleId == 2 || $roleId == 3): ?>
         <button onclick="ouvrirAjoutJeu()">🎲 Ajouter un jeu</button>
         <?php endif; ?>
 
