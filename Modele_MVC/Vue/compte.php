@@ -11,7 +11,7 @@
     <header>
         <a href="../Vue/accueil.php"><img src="../img/LogoUSPN.png" alt="Sorbonne Paris Nord"></a>
         <nav>
-            <a href="../Vue/documentation.html">Documentation</a>
+            <a href="../Vue/documentation.php">Documentation</a>
             <a href="../controleurs/info.php ">Collection</a>
             <a href="../Vue/reservation_View.php">Réservation</a>
 
@@ -31,11 +31,18 @@
             <img src="../img/profile.png" alt="Icône Profil" class="icone-utilisateur" onclick="basculerMenuDeroulant()">
 
             <div class="menu-deroulant" id="menuDeroulant">
-                <a href="compte.php">Gestion du profil</a>
+                <?php if (isset($_COOKIE['username'])): ?>
+                    <a href="compte.php">Gestion du profil</a>
+                <?php endif; ?>
                 <?php if (isset($_COOKIE['role_id']) && ($_COOKIE['role_id'] == 2 || $_COOKIE['role_id'] == 3)): ?>
-            <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
-        <?php endif; ?>
-        <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
+                    <a href="../Vue/gestion.php">Gestion des utilisateurs et des jeux</a>
+                <?php endif; ?>
+                <?php if (!isset($_COOKIE['role_id'])): ?>
+                    <a href="../Vue/connexion.html"> Se connecter</a>
+                <?php endif; ?>
+                <?php if (isset($_COOKIE['username'])): ?>
+                    <button class="bouton-deconnexion" onclick="window.location.href='../controleurs/deconnexion.php';">Déconnexion</button>
+                <?php endif; ?>
             </div>
         </div>
         </div>
